@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UCodeInterpreter", "UCodeInterpreter\UCodeInterpreter.vcxproj", "{73871CD2-204F-420E-9B9F-2DBAC4DCB155}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73871CD2-204F-420E-9B9F-2DBAC4DCB155}.Debug|x64.ActiveCfg = Debug|x64
+		{73871CD2-204F-420E-9B9F-2DBAC4DCB155}.Debug|x64.Build.0 = Debug|x64
+		{73871CD2-204F-420E-9B9F-2DBAC4DCB155}.Release|x64.ActiveCfg = Release|x64
+		{73871CD2-204F-420E-9B9F-2DBAC4DCB155}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E807A5F-51E3-4313-BD2F-2DE3E77A3006}
+	EndGlobalSection
+EndGlobal
