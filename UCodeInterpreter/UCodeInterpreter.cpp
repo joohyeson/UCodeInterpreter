@@ -19,7 +19,6 @@ void UCodeInterpreter::ReadFile(std::string path)
     std::ifstream is(path, std::ifstream::binary);
     std::string nowLine;
     std::string lines;
-    int count = 0;
 
     if (is.is_open()) {
         while (std::getline(is, nowLine))
@@ -61,39 +60,40 @@ void UCodeInterpreter::ReadFile(std::string path)
             }
             else//label 있는 경우
             {
-                //std::string label;
-                //std::string inst;
 
-                //int param1;
-                //int param2;
-                //int param3;
+  
 
-                //char* arr[1024];
+                        int param[3] = { -1, -1, -1 };
 
-                //*arr = strtok(&nowLine[0], " ");
-                //strncpy(&label[0], *arr, nowLine.size());
-                //*arr = strtok(&nowLine[0], " ");
-                //strncpy(&inst[0], *arr, nowLine.size());
-                //*arr = strtok(&nowLine[0], " ");
-                //param1 = atoi(*arr);
-                //*arr = strtok(&nowLine[0], " ");
-                //param2 = atoi(*arr);
-                //*arr = strtok(&nowLine[0], " ");
-                //param3 = atoi(*arr);
+                        char* arr[1024];
 
-                //Instruction instruction = Instruction(label, inst, param1, param2, param3);
+                        *arr = strtok(&nowLine[0], " ");
+                        std::string label(*arr);
 
-                //ui.textEdit_2->setText(QString::fromStdString(instruction.label));
-                //ui.textEdit_2->setText(QString::fromStdString(instruction.inst));
-                ////ui.textEdit_2->setText(QString::number(instruction.param1));
-                ////ui.textEdit_2->setText(QString::number(instruction.param2));
-                ////ui.textEdit_2->setText(QString::number(instruction.param3));
+                        *arr = strtok(NULL, " ");
+                        std::string inst(*arr);
+
+                        for (int i = 0; i < UCodeInterpreter::GetParamCount(inst); i++)
+                        {
+                            *arr = strtok(NULL, " ");
+                            if (*arr == NULL)
+                            {
+                                param[i] = -1;
+                                break;
+                            }
+                            else
+                            {
+                                param[i] = atoi(*arr);
+                            }
+                        }
+
+                        Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
+
+                        Instructions.push_back(instruction);
+
+                        ui.textEdit_5->setText(QString::fromStdString(instruction.label) + " " + QString::fromStdString(instruction.inst) + " " + QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
             }
-
-            count++;
         }
-
-
     }
 
     ui.textEdit->setText(QString::fromStdString(lines));
@@ -133,8 +133,4 @@ int UCodeInterpreter::GetParamCount(std::string ins)
     }
 
     return 0;
-
-
-    //입출력 처리 함수(read, wrtie, lf 는 뭔지 교수님한테 물어보기)
-
 }
