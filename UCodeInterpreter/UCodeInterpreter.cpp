@@ -15,6 +15,7 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent)
 void UCodeInterpreter::On_ReadUcoButton_Clicked()
 {
     ReadFile(QFileDialog::getOpenFileName(this, "Search File", QDir::currentPath(), "Files(*.uco)").toStdString());
+    Assemble();
 }
 
 void UCodeInterpreter::On_ExitButton_Clicked()
@@ -98,7 +99,7 @@ void UCodeInterpreter::ReadFile(std::string path)
         }
     }
 
-    ui.textEdit->setText(QString::fromStdString(lines));
+   // ui.textEdit->setText(QString::fromStdString(lines));
 
 }
 
@@ -135,4 +136,18 @@ int UCodeInterpreter::GetParamCount(std::string ins)
     }
 
     return 0;
+}
+
+void UCodeInterpreter::Assemble()
+{
+    for (int i = 0; i < Instructions.size(); i++)
+    {
+        ui.tableWidget->insertRow(ui.tableWidget->rowCount());
+
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::fromStdString(Instructions[i].label)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 1, new QTableWidgetItem(QString::fromStdString(Instructions[i].inst)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 2, new QTableWidgetItem(QString::number(Instructions[i].param1)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 3, new QTableWidgetItem(QString::number(Instructions[i].param2)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 4, new QTableWidgetItem(QString::number(Instructions[i].param3)));
+    }
 }
