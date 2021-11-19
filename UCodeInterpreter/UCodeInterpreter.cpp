@@ -60,13 +60,14 @@ void UCodeInterpreter::ReadFile(std::string path)
             }
             else //label 있는 경우
             {
-
                 int param[3] = { -1, -1, -1 };
 
                 char* arr[1024];
-                *arr = strtok(&nowLine[0], " ");
 
+                *arr = strtok(&nowLine[0], " ");
                 std::string label(*arr);
+
+                *arr = strtok(NULL, " ");
                 std::string inst(*arr);
 
                 for (int i = 0; i < UCodeInterpreter::GetParamCount(inst); i++)
@@ -83,11 +84,15 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                 }
 
+
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
                 Instructions.push_back(instruction);
+                
+                QString temp = ui.textEdit_2->toPlainText();
+                temp+="\n"+QString::fromStdString(instruction.label) + " " + QString::fromStdString(instruction.inst) + " " + QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3);
 
-                ui.textEdit_2->setText(QString::fromStdString(instruction.inst)+" "+QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
+                ui.textEdit_2->setText(temp);
             }
 
         }
