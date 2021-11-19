@@ -27,7 +27,6 @@ void UCodeInterpreter::ReadFile(std::string path)
     std::ifstream is(path, std::ifstream::binary);
     std::string nowLine;
     std::string lines;
-    int count = 0;
 
     if (is.is_open()) {
         while (std::getline(is, nowLine))
@@ -72,9 +71,11 @@ void UCodeInterpreter::ReadFile(std::string path)
                 int param[3] = { -1, -1, -1 };
 
                 char* arr[1024];
-                *arr = strtok(&nowLine[0], " ");
 
+                *arr = strtok(&nowLine[0], " ");
                 std::string label(*arr);
+
+                *arr = strtok(NULL, " ");
                 std::string inst(*arr);
 
                 for (int i = 0; i < UCodeInterpreter::GetParamCount(inst); i++)
@@ -91,17 +92,18 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                 }
 
+
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
                 Instructions.push_back(instruction);
+                
+                QString temp = ui.textEdit_2->toPlainText();
+                temp+="\n"+QString::fromStdString(instruction.label) + " " + QString::fromStdString(instruction.inst) + " " + QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3);
 
-                ui.textEdit_2->setText(QString::fromStdString(instruction.inst)+" "+QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
+                ui.textEdit_2->setText(temp);
             }
 
-            count++;
         }
-
-
     }
 
     ui.textEdit->setText(QString::fromStdString(lines));
@@ -111,7 +113,7 @@ void UCodeInterpreter::ReadFile(std::string path)
 int UCodeInterpreter::GetParamCount(std::string ins)
 {
     std::string param0Inst[] = { "nop", "end", "ret", "ldp", "push", "ldi", "sti", "not", "neg", "inc", "dec", "dup",
-                                 "add", "sub", "mult", "div", "mod", "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swap" };
+                                            "add", "sub", "mult", "div", "mod", "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swap" };
     std::string param1Inst[] = { "bgn", "proc", "call", "ujp", "tjp", "fjp", "ldc" };
     std::string param2Inst[] = { "lod", "lda", "str" };
     std::string param3Inst[] = { "sym" };
