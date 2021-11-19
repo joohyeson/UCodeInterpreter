@@ -11,8 +11,9 @@ public:
 
     Instruction(std::string a, std::string b, int p1, int p2, int p3)
     {
-        strcpy(&label[0], &a[0]);
-        strcpy(&inst[0], &b[0]);
+        label = a;
+        inst = b;
+
         param1 = p1;
         param2 = p2;
         param3 = p3;

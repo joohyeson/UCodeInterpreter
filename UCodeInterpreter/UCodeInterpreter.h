@@ -15,6 +15,7 @@ public:
     UCodeInterpreter(QWidget *parent = Q_NULLPTR);
 
     void ReadFile(std::string path);
+    int GetParamCount(std::string ins);
     void Assemble() {};
     void Execute() {};
     void Statistics() {};
