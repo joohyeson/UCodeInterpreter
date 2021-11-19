@@ -21,6 +21,7 @@ public:
     void Statistics() {};
 
 private slots:
+    void On_ReadUcoButton_Clicked();
     void On_ExitButton_Clicked();
 
 private:

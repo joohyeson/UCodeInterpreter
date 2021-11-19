@@ -1,12 +1,20 @@
 #include "UCodeInterpreter.h"
 #include <fstream>
+#include <QFileDialog>
+#include <QDebug>
 
 UCodeInterpreter::UCodeInterpreter(QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
 
+    connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
     connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
+}
+
+void UCodeInterpreter::On_ReadUcoButton_Clicked()
+{
+    ReadFile(QFileDialog::getOpenFileName(this, "Search File", QDir::currentPath(), "Files(*.uco)").toStdString());
 }
 
 void UCodeInterpreter::On_ExitButton_Clicked()
@@ -133,8 +141,4 @@ int UCodeInterpreter::GetParamCount(std::string ins)
     }
 
     return 0;
-
-
-    //입출력 처리 함수(read, wrtie, lf 는 뭔지 교수님한테 물어보기)
-
 }
