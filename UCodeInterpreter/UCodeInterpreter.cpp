@@ -56,38 +56,38 @@ void UCodeInterpreter::ReadFile(std::string path)
 
                 Instructions.push_back(instruction);
 
-                ui.textEdit_2->setText(QString::fromStdString(instruction.inst)+" "+QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
+                //ui.textEdit_2->setText(QString::fromStdString(instruction.inst)+" "+QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
 
             }
-            else//label 있는 경우
+            else //label 있는 경우
             {
-                //std::string label;
-                //std::string inst;
+                int param[3] = { -1, -1, -1 };
 
-                //int param1;
-                //int param2;
-                //int param3;
+                char* arr[1024];
+                *arr = strtok(&nowLine[0], " ");
 
-                //char* arr[1024];
+                std::string label(*arr);
+                std::string inst(*arr);
 
-                //*arr = strtok(&nowLine[0], " ");
-                //strncpy(&label[0], *arr, nowLine.size());
-                //*arr = strtok(&nowLine[0], " ");
-                //strncpy(&inst[0], *arr, nowLine.size());
-                //*arr = strtok(&nowLine[0], " ");
-                //param1 = atoi(*arr);
-                //*arr = strtok(&nowLine[0], " ");
-                //param2 = atoi(*arr);
-                //*arr = strtok(&nowLine[0], " ");
-                //param3 = atoi(*arr);
+                for (int i = 0; i < UCodeInterpreter::GetParamCount(inst); i++)
+                {
+                    *arr = strtok(NULL, " ");
+                    if (*arr == NULL)
+                    {
+                        param[i] = -1;
+                        break;
+                    }
+                    else
+                    {
+                        param[i] = atoi(*arr);
+                    }
+                }
 
-                //Instruction instruction = Instruction(label, inst, param1, param2, param3);
+                Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
-                //ui.textEdit_2->setText(QString::fromStdString(instruction.label));
-                //ui.textEdit_2->setText(QString::fromStdString(instruction.inst));
-                ////ui.textEdit_2->setText(QString::number(instruction.param1));
-                ////ui.textEdit_2->setText(QString::number(instruction.param2));
-                ////ui.textEdit_2->setText(QString::number(instruction.param3));
+                Instructions.push_back(instruction);
+
+                ui.textEdit_2->setText(QString::fromStdString(instruction.inst)+" "+QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
             }
 
             count++;
@@ -103,7 +103,7 @@ void UCodeInterpreter::ReadFile(std::string path)
 int UCodeInterpreter::GetParamCount(std::string ins)
 {
     std::string param0Inst[] = { "nop", "end", "ret", "ldp", "push", "ldi", "sti", "not", "neg", "inc", "dec", "dup",
-                                            "add", "sub", "mult", "div", "mod", "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swap" };
+                                 "add", "sub", "mult", "div", "mod", "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swap" };
     std::string param1Inst[] = { "bgn", "proc", "call", "ujp", "tjp", "fjp", "ldc" };
     std::string param2Inst[] = { "lod", "lda", "str" };
     std::string param3Inst[] = { "sym" };
