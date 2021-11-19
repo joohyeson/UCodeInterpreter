@@ -55,8 +55,6 @@ void UCodeInterpreter::ReadFile(std::string path)
 
                 Instructions.push_back(instruction);
 
-                //ui.textEdit_2->setText(QString::fromStdString(instruction.inst)+" "+QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3));
-
             }
             else //label 있는 경우
             {
@@ -84,15 +82,9 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                 }
 
-
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
                 Instructions.push_back(instruction);
-                
-                QString temp = ui.textEdit_2->toPlainText();
-                temp+="\n"+QString::fromStdString(instruction.label) + " " + QString::fromStdString(instruction.inst) + " " + QString::number(instruction.param1) + " " + QString::number(instruction.param2) + " " + QString::number(instruction.param3);
-
-                ui.textEdit_2->setText(temp);
             }
 
         }
