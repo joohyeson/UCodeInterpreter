@@ -188,20 +188,17 @@ void UCodeInterpreter::Execute()
 {
     for (int i = 0; i < Instructions.size(); i++)
     {
-        int opcodeNum = 0;
+        enum opcode inst;    // 열거형 변수 선언
+
         for (int j= 0; j < 40; j++)
         {
             if (opcodeName[j] == Instructions[i].inst)
             {
-                opcodeNum = j;
-            }
+                inst= static_cast<opcode>(j);
+            }//enum 변수값 찾아서 초기화해줌
         }
-        
-        enum opcode inst;    // 열거형 변수 선언
 
-        inst = static_cast<opcode>(opcodeNum);    // 열거형 값 할당
-
-        switch (inst)
+        switch (inst)//switch문에서는 str못 넣어서 enum값 사용
         {
         case bgn:
             std::cout << "Hello";
