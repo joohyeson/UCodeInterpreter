@@ -9,6 +9,15 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent)
 {
     ui.setupUi(this);
 
+    ui.tableWidget->setColumnWidth(0, 80);
+    ui.tableWidget->setColumnWidth(1, 100);
+    ui.tableWidget->setColumnWidth(2, 80);
+    ui.tableWidget->setColumnWidth(3, 80);
+    ui.tableWidget->setColumnWidth(4, 80);
+
+    ui.tableWidget_2->setColumnWidth(0, 230);
+    ui.tableWidget_2->setColumnWidth(1, 230);
+
     connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
     connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
 }
@@ -189,7 +198,7 @@ void UCodeInterpreter::Execute()
     for (int i = 0; i < Instructions.size(); i++)
     {
         int opcodeNum = 0;
-        for (int j= 0; j < 40; j++)
+        for (int j= 0; j < NO_OPCODE; j++)
         {
             if (opcodeName[j] == Instructions[i].inst)
             {
