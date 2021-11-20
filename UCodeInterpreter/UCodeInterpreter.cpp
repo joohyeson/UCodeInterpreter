@@ -36,7 +36,7 @@ void UCodeInterpreter::On_ExitButton_Clicked()
 
 typedef enum opcode {
     nop, bgn, sym, lod, lda, ldc, str, ldi, sti,
-    not, neg, inc, decop, dup, add, sub, mult, divop, mod,
+    not, neg, inc, dec, dup, add, sub, mult, divop, mod,
     gt, lt, ge, le, eq, ne, and, or , swp, ujp, tjp, fjp,
     call, ret, push, ldp, proc, endop, read, write, lf,
 }opcode; // Execute 함수 case문에서 사용
@@ -139,7 +139,7 @@ void UCodeInterpreter::ReadFile(std::string path)
 int UCodeInterpreter::GetParamCount(std::string ins)
 {
     std::string param0Inst[] = { "nop", "end", "ret", "ldp", "push", "ldi", "sti", "not", "neg", "inc", "dec", "dup",
-                                            "add", "sub", "mult", "div", "mod", "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swap" };
+                                 "add", "sub", "mult", "div", "mod", "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swap" };
     std::string param1Inst[] = { "bgn", "proc", "call", "ujp", "tjp", "fjp", "ldc" };
     std::string param2Inst[] = { "lod", "lda", "str" };
     std::string param3Inst[] = { "sym" };
@@ -209,6 +209,107 @@ void UCodeInterpreter::Execute()
 
         switch (inst)//switch문에서는 str못 넣어서 enum값 사용
         {
+        // 단항 연산자
+        case opcode::not:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(!origin);
+            break;
+        }
+
+        case opcode::neg:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(-origin);
+            break;
+        }
+
+        case opcode::inc:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(++origin);
+            break;
+        }
+
+        case opcode::dec:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(--origin);
+            break;
+        }
+
+        case opcode::dup:
+        {
+            int origin = mCPU.top();
+
+            mCPU.push(origin);
+            break;
+        }
+
+        // 이항 연산자
+        case opcode::add:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp + origin);
+            break;
+        }
+
+        case opcode::sub:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp - origin);
+            break;
+        }
+
+        case opcode::mult:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp * origin);
+            break;
+        }
+
+        case opcode::divop:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp / origin);
+            break;
+        }
+
+        case opcode::mod:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp % origin);
+            break;
+        }
+
         case opcode::gt:
         {
             int origin = mCPU.top();
@@ -276,7 +377,7 @@ void UCodeInterpreter::Execute()
             break;
         }
 
-        case opcode::and :
+        case opcode::and:
         {
             int origin = mCPU.top();
             mCPU.pop();
@@ -286,7 +387,8 @@ void UCodeInterpreter::Execute()
             mCPU.push(cmp && origin);
             break;
         }
-        case opcode:: or :
+
+        case opcode:: or:
         {
             int origin = mCPU.top();
             mCPU.pop();
@@ -296,6 +398,19 @@ void UCodeInterpreter::Execute()
             mCPU.push(cmp || origin);
             break;
         }
+
+        case opcode::swp:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(origin);
+            mCPU.push(cmp);
+            break;
+        }
+
         default:
             break;
         }
