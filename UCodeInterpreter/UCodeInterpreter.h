@@ -6,6 +6,7 @@
 #include <stack>
 #include "LabelInfo.h"
 #include "Instruction.h"
+#define NO_OPCODE 40
 
 class UCodeInterpreter : public QMainWindow
 {

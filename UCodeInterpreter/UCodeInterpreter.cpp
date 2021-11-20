@@ -24,6 +24,21 @@ void UCodeInterpreter::On_ExitButton_Clicked()
     this->close();
 }
 
+typedef enum opcode {
+    nop, bgn, sym, lod, lda, ldc, str, ldi, sti,
+    not, neg, inc, decop, dup, add, sub, mult, divop, mod,
+    gt, lt, ge, le, eq, ne, and, or , swp, ujp, tjp, fjp,
+    call, ret, push, ldp, proc, endop, read, write, lf,
+}opcode; // Execute 함수 case문에서 사용
+
+char* opcodeName[NO_OPCODE] =
+{
+    "nop", "bgn", "sym", "lod", "lda", "ldc", "str", "ldi", "sti",
+    "not", "neg", "inc", "dec", "dup", "add", "sub", "mult", "div", "mod",
+    "gt", "lt", "ge", "le", "eq", "ne", "and", "or", "swp", "ujp", "tjp", "fjp",
+    "call", "ret", "push", "ldp", "proc", "end", "read", "write", "lf"
+}; // 모든 명령어
+
 void UCodeInterpreter::ReadFile(std::string path)
 {
     std::ifstream is(path, std::ifstream::binary);
@@ -170,4 +185,8 @@ void UCodeInterpreter::Assemble()
 
 void UCodeInterpreter::Execute()
 {
+    for (int i = 0; i < Instructions.size(); i++)
+    {
+        switch(Instructions[i].inst)
+    }
 }
