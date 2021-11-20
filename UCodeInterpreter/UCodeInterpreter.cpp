@@ -65,7 +65,7 @@ void UCodeInterpreter::ReadFile(std::string path)
             if (nowLine[0] == ' ')//label이 없는 경우
             {
                 std::string label;
-                
+
 
                 int param[3] = { -1, -1, -1 };
 
@@ -132,7 +132,7 @@ void UCodeInterpreter::ReadFile(std::string path)
         }
     }
 
-   // ui.textEdit->setText(QString::fromStdString(lines));
+    // ui.textEdit->setText(QString::fromStdString(lines));
 
 }
 
@@ -146,7 +146,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
 
     for (int i = 0; i < param1Inst->size(); i++)
     {
-        if (param1Inst[i]==ins)
+        if (param1Inst[i] == ins)
         {
             return 1;
         }
@@ -199,19 +199,103 @@ void UCodeInterpreter::Execute()
     {
         enum opcode inst;    // 열거형 변수 선언
 
-        for (int j= 0; j < 40; j++)
+        for (int j = 0; j < 40; j++)
         {
             if (opcodeName[j] == Instructions[i].inst)
             {
-                inst= static_cast<opcode>(j);
+                inst = static_cast<opcode>(j);
             }//enum 변수값 찾아서 초기화해줌
         }
 
         switch (inst)//switch문에서는 str못 넣어서 enum값 사용
         {
-        case bgn:
-            std::cout << "Hello";
+        case opcode::gt:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp > origin);
             break;
+        }
+           
+        case opcode::lt:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp < origin);
+            break;
+        }
+           
+        case opcode::ge:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp >= origin);
+            break;
+        }
+            
+        case opcode::le:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp <= origin);
+            break;
+        }
+            
+        case eq:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp == origin);
+            break;
+        }
+           
+
+        case opcode::ne:
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp != origin);
+            break;
+        }
+
+        case opcode::and :
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp && origin);
+            break;
+        }
+        case opcode:: or :
+        {
+            int origin = mCPU.top();
+            mCPU.pop();
+            int cmp = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(cmp || origin);
+            break;
+        }
         default:
             break;
         }
