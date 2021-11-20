@@ -17,7 +17,7 @@ public:
     void ReadFile(std::string path);
     int GetParamCount(std::string ins);
     void Assemble();
-    void Execute() {};
+    void Execute();
     void Statistics() {};
 
 private slots:

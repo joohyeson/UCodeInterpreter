@@ -16,6 +16,7 @@ void UCodeInterpreter::On_ReadUcoButton_Clicked()
 {
     ReadFile(QFileDialog::getOpenFileName(this, "Search File", QDir::currentPath(), "Files(*.uco)").toStdString());
     Assemble();
+    Execute();
 }
 
 void UCodeInterpreter::On_ExitButton_Clicked()
@@ -28,6 +29,8 @@ void UCodeInterpreter::ReadFile(std::string path)
     std::ifstream is(path, std::ifstream::binary);
     std::string nowLine;
     std::string lines;
+
+    int lineCount = 0;
 
     if (is.is_open()) {
         while (std::getline(is, nowLine))
@@ -93,9 +96,14 @@ void UCodeInterpreter::ReadFile(std::string path)
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
-                Instructions.push_back(instruction);
-            }
+                LabelInfo tmpLabel;
+                tmpLabel.addr = lineCount;
+                tmpLabel.label = label;
 
+                Instructions.push_back(instruction);
+                Labels.push_back(tmpLabel);
+            }
+            lineCount++;
         }
     }
 
@@ -150,4 +158,16 @@ void UCodeInterpreter::Assemble()
         ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 3, new QTableWidgetItem(QString::number(Instructions[i].param2)));
         ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 4, new QTableWidgetItem(QString::number(Instructions[i].param3)));
     }
+
+    for (int i = 0; i < Labels.size(); i++)
+    {
+        ui.tableWidget_2->insertRow(ui.tableWidget_2->rowCount());
+
+        ui.tableWidget_2->setItem(ui.tableWidget_2->rowCount() - 1, 0, new QTableWidgetItem(QString::fromStdString(Labels[i].label)));
+        ui.tableWidget_2->setItem(ui.tableWidget_2->rowCount() - 1, 1, new QTableWidgetItem(QString::number(Labels[i].addr)));
+    }
+}
+
+void UCodeInterpreter::Execute()
+{
 }
