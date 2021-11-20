@@ -2,6 +2,7 @@
 #include <fstream>
 #include <QFileDialog>
 #include <QDebug>
+#include <iostream>
 
 UCodeInterpreter::UCodeInterpreter(QWidget* parent)
     : QMainWindow(parent)
@@ -31,7 +32,7 @@ typedef enum opcode {
     call, ret, push, ldp, proc, endop, read, write, lf,
 }opcode; // Execute 함수 case문에서 사용
 
-char* opcodeName[NO_OPCODE] =
+std::string opcodeName[NO_OPCODE] =
 {
     "nop", "bgn", "sym", "lod", "lda", "ldc", "str", "ldi", "sti",
     "not", "neg", "inc", "dec", "dup", "add", "sub", "mult", "div", "mod",
@@ -187,6 +188,26 @@ void UCodeInterpreter::Execute()
 {
     for (int i = 0; i < Instructions.size(); i++)
     {
-        switch(Instructions[i].inst)
+        int opcodeNum = 0;
+        for (int j= 0; j < 40; j++)
+        {
+            if (opcodeName[j] == Instructions[i].inst)
+            {
+                opcodeNum = j;
+            }
+        }
+        
+        enum opcode inst;    // 열거형 변수 선언
+
+        inst = static_cast<opcode>(opcodeNum);    // 열거형 값 할당
+
+        switch (inst)
+        {
+        case bgn:
+            std::cout << "Hello";
+            break;
+        default:
+            break;
+        }
     }
 }
