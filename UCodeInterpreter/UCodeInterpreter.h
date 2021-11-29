@@ -31,4 +31,7 @@ private:
     std::stack<int> mCPU;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
+    int pc;
+    int BP;
+    int SP;
 };

@@ -3,6 +3,8 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <iostream>
+#define OP_SIZE 10
+#define BUF_SIZE 512
 
 UCodeInterpreter::UCodeInterpreter(QWidget* parent)
     : QMainWindow(parent)
@@ -66,7 +68,6 @@ void UCodeInterpreter::ReadFile(std::string path)
             {
                 std::string label;
 
-
                 int param[3] = { -1, -1, -1 };
 
                 char* arr[1024];
@@ -122,7 +123,7 @@ void UCodeInterpreter::ReadFile(std::string path)
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
                 LabelInfo tmpLabel;
-                tmpLabel.addr = lineCount;
+                tmpLabel.addr = lineCount + 1;
                 tmpLabel.label = label;
 
                 Instructions.push_back(instruction);
@@ -132,7 +133,7 @@ void UCodeInterpreter::ReadFile(std::string path)
         }
     }
 
-    // ui.textEdit->setText(QString::fromStdString(lines));
+    //ui.textEdit->setText(QString::number(Labels[1].addr));
 
 }
 
@@ -198,6 +199,9 @@ void UCodeInterpreter::Execute()
     for (int i = 0; i < Instructions.size(); i++)
     {
         enum opcode inst;    // 열거형 변수 선언
+        int tempPc = 0;
+        char buf[BUF_SIZE];
+        char op[OP_SIZE];
 
         for (int j = 0; j < 40; j++)
         {
@@ -209,6 +213,41 @@ void UCodeInterpreter::Execute()
 
         switch (inst)//switch문에서는 str못 넣어서 enum값 사용
         {
+        // 함수 정의 및 호출
+        case opcode::ret:
+        {
+            
+            break;
+        }
+
+        // 흐름 제어
+        case opcode::ujp:
+        {
+            int location = Instructions[i].param1;
+            pc = Labels[location].addr;
+            break;
+        }
+
+        case opcode::tjp:
+        {
+            if (mCPU.top() != 0)
+            {
+                int location = Instructions[i].param1;
+                pc = Labels[location].addr;
+            }
+            break;
+        }
+
+        case opcode::fjp:
+        {
+            if (mCPU.top() == 0)
+            {
+                int location = Instructions[i].param1;
+                pc = Labels[location].addr;
+            }
+            break;
+        }
+
         // 단항 연산자
         case opcode::not:
         {
@@ -224,7 +263,7 @@ void UCodeInterpreter::Execute()
             int origin = mCPU.top();
             mCPU.pop();
 
-            mCPU.push(-origin);
+            mCPU.push(-1 * origin);
             break;
         }
 
