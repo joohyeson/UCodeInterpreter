@@ -3,11 +3,8 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <iostream>
-#define OP_SIZE 10
-#define BUF_SIZE 512
 
-UCodeInterpreter::UCodeInterpreter(QWidget* parent)
-    : QMainWindow(parent)
+UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
 
@@ -21,6 +18,7 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent)
     ui.tableWidget_2->setColumnWidth(1, 230);
 
     connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
+    connect(ui.pushButton_5, &QPushButton::clicked, this, &UCodeInterpreter::On_CreateLstButton_Clicked);
     connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
 }
 
@@ -29,6 +27,11 @@ void UCodeInterpreter::On_ReadUcoButton_Clicked()
     ReadFile(QFileDialog::getOpenFileName(this, "Search File", QDir::currentPath(), "Files(*.uco)").toStdString());
     Assemble();
     Execute();
+}
+
+void UCodeInterpreter::On_CreateLstButton_Clicked()
+{
+    CreateFile(QFileDialog::getSaveFileName(this, "Save File", QDir::currentPath(), "Files(*.lst)").toStdString());
 }
 
 void UCodeInterpreter::On_ExitButton_Clicked()
@@ -53,7 +56,7 @@ std::string opcodeName[NO_OPCODE] =
 
 void UCodeInterpreter::ReadFile(std::string path)
 {
-    std::ifstream is(path, std::ifstream::binary);
+    std::ifstream is(path, std::ifstream::in, std::ifstream::binary);
     std::string nowLine;
     std::string lines;
 
@@ -199,9 +202,6 @@ void UCodeInterpreter::Execute()
     for (int i = 0; i < Instructions.size(); i++)
     {
         enum opcode inst;    // 열거형 변수 선언
-        int tempPc = 0;
-        char buf[BUF_SIZE];
-        char op[OP_SIZE];
 
         for (int j = 0; j < 40; j++)
         {
@@ -217,6 +217,21 @@ void UCodeInterpreter::Execute()
         case opcode::ret:
         {
             
+            break;
+        }
+
+        case opcode::ldp:
+        {
+            break;
+        }
+
+        case opcode::push:
+        {
+            break;
+        }
+
+        case opcode::call:
+        {
             break;
         }
 
@@ -454,4 +469,10 @@ void UCodeInterpreter::Execute()
             break;
         }
     }
+}
+
+void UCodeInterpreter::CreateFile(std::string path)
+{
+    std::ofstream os(path, std::ofstream::out, std::ofstream::binary);
+    
 }
