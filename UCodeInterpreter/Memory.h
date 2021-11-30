@@ -7,7 +7,7 @@ public:
 
     int GetMemoryValue(int block, int offset)
     {
-        return MemoryStack[block][offset];
+        return MemoryStack[block-1][offset];
     }
 
     int GetMemoryValue(int addr)
@@ -18,7 +18,7 @@ public:
 
     int GetMemoryAddress(int block, int offset)
     {
-        auto it = MemoryStack[block].begin();
+        auto it = MemoryStack[block-1].begin();
         return reinterpret_cast<int>(&(it + offset));
     }
 
