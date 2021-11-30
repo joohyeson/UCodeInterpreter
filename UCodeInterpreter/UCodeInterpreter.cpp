@@ -261,7 +261,7 @@ void UCodeInterpreter::Execute(int now)
     {
         int variableSize = std::stoi(Instructions[now].param1);
         
-        mMemory.AddMemory(variableSize, "proc");
+        mMemory.AddMemory(variableSize, std::string("proc"));
         break;
     }
 
@@ -295,7 +295,6 @@ void UCodeInterpreter::Execute(int now)
             int origin = mCPU.top();
             topstack.push(origin);
         }
-
         PC = pcTemp;
         break;
     }
@@ -316,7 +315,7 @@ void UCodeInterpreter::Execute(int now)
         {
             if (Instructions[now].param1 == Labels[i].label)
             {
-                PC = Labels[i].addr - 1;
+                PC = Labels[i].addr - 2;
             }
         }
         break;
@@ -624,13 +623,13 @@ void UCodeInterpreter::PrintMemory() {
     }
 
     for (int i = 0; i < tmpMemory[1].size(); i++) {
-        if (tmpMemory[1][i] != -1) {
+       // if (tmpMemory[1][i] != -1) {
             ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
             
             ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 0, new QTableWidgetItem("2"));
             ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 1, new QTableWidgetItem(QString::number(i)));
             ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 2, new QTableWidgetItem(QString::number(tmpMemory[1][i])));
-        }
+       // }
     }
 }
 //GUI CPUStack Ãâ·Â
