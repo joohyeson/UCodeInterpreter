@@ -321,7 +321,7 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-    // Èå¸§ Á¦¾î
+    // Èå¸§ Á¦¾î °ÅÁþ: 0 Âü: 1
     case opcode::ujp:
     {
         int location = std::stoi(Instructions[now].param1);
@@ -331,7 +331,7 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::tjp:
     {
-        if (mCPU.top() != 0)
+        if (mCPU.top() == 0)
         {
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
@@ -341,7 +341,7 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::fjp:
     {
-        if (mCPU.top() == 0)
+        if (mCPU.top() != 0)
         {
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
