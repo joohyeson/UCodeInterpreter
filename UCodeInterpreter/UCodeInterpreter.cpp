@@ -199,6 +199,8 @@ void UCodeInterpreter::Assemble()
 
 void UCodeInterpreter::Execute()
 {
+    int tmpPc = 0;
+
     for (int i = 0; i < Instructions.size(); i++)
     {
         enum opcode inst;    // 열거형 변수 선언
@@ -213,10 +215,14 @@ void UCodeInterpreter::Execute()
 
         switch (inst)//switch문에서는 str못 넣어서 enum값 사용
         {
-        // 함수 정의 및 호출
+        // 함수 정의 및 호출  확실 x
         case opcode::ret:
         {
-            
+            int origin = topstack.top();
+            topstack.pop();
+
+            mCPU.top() = origin;
+            pc = mCPU.top();
             break;
         }
 
@@ -227,11 +233,16 @@ void UCodeInterpreter::Execute()
 
         case opcode::push:
         {
+            int origin = mCPU.top();
+
+            mMemory.SetMemoryValue(origin);
+
             break;
         }
 
         case opcode::call:
         {
+
             break;
         }
 

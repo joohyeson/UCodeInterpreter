@@ -6,6 +6,7 @@
 #include <stack>
 #include "LabelInfo.h"
 #include "Instruction.h"
+#include <fstream>
 #define NO_OPCODE 40
 
 class UCodeInterpreter : public QMainWindow
@@ -14,6 +15,8 @@ class UCodeInterpreter : public QMainWindow
 
 public:
     UCodeInterpreter(QWidget *parent = Q_NULLPTR);
+    
+    std::ifstream is;
 
     void ReadFile(std::string path);
     int GetParamCount(std::string ins);
@@ -31,9 +34,8 @@ private:
     Ui::UCodeInterpreterClass ui;
     Memory mMemory;
     std::stack<int> mCPU;
+    std::stack<int> topstack;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
     int pc;
-    int BP;
-    int SP;
 };

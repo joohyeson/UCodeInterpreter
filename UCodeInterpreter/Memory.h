@@ -36,6 +36,11 @@ public:
         *ptr= value;
     }
 
+    void SetMemoryValue(int value) // È®½Çx
+    {
+        MemoryStack->push_back(value);
+    }
+
    
 private:
     int BP;
