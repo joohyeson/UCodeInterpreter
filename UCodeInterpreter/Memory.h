@@ -24,7 +24,15 @@ public:
 
     void SetMemoryValue(int value, int block, int offset)
     {
-        MemoryStack[block - 1][offset] = value;
+        if (block == 2)
+        {
+            MemoryStack[block - 1][BP + offset] = value;
+        }
+        else
+        {
+            MemoryStack[block - 1][offset] = value;
+        }
+
     }
 
     void SetMemoryValue(int value, int addr)
