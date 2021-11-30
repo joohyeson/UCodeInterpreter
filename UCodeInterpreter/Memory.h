@@ -19,24 +19,18 @@ public:
     int GetMemoryAddress(int block, int offset)
     {
         auto it = MemoryStack[block].begin();
-        return reinterpret_cast<int>(&(it+offset));
+        return reinterpret_cast<int>(&(it + offset));
     }
 
     void SetMemoryValue(int value, int block, int offset)
     {
-        //어디서 size 안 늘려주면 터질듯
-        if (MemoryStack[block-1].size() <= offset) {
-            MemoryStack[block-1].resize(offset + 1);
-        }
-
-        MemoryStack[block-1][offset]=value;
+        MemoryStack[block - 1][offset] = value;
     }
 
     void SetMemoryValue(int value, int addr)
     {
-        //어디서 size 안 늘려주면 터질듯
         int* ptr = reinterpret_cast<int*>(addr);
-        *ptr= value;
+        *ptr = value;
     }
 
     void SetMemoryValue(int value) // 확실x
@@ -44,10 +38,43 @@ public:
         MemoryStack->push_back(value);
     }
 
+    void AddMemory(int value, std::string op) {
+        if (op == "proc") {
+            MemoryStack[1].resize(MemoryStack[1].size() + value,-1);
+            
+
+            if (BP == -1) {
+                BP = 0;
+            }
+            else
+            {
+                BP += BlockSize.back();
+            }
+
+            BlockSize.push_back(value);
+
+        }
+        else
+        {
+            MemoryStack[0].resize(value,-1);
+        }
+    }
+
+    void RemoveMemory() {
+        
+        MemoryStack[1].resize(BP);//할당됐던 메모리를 풀어줌
+        BP -= BlockSize[BlockSize.size() - 2];//이전 함수 메모리 블럭의 시작 위치로 이동
+
+        BlockSize.pop_back();
+    }
+
+    std::vector<int>* GetMemoryStack() {
+        return MemoryStack;
+    }
    
 private:
-    int BP;
-    int SP;
+    int BP=-1;
 
     std::vector<int> MemoryStack[2];
+    std::vector<int> BlockSize;
 };

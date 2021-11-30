@@ -74,7 +74,7 @@ typedef enum opcode {
     nop, bgn, sym, lod, lda, ldc, str, ldi, sti,
     not, neg, inc, dec, dup, add, sub, mult, divop, mod,
     gt, lt, ge, le, eq, ne, and, or , swp, ujp, tjp, fjp,
-    call, ret, push, ldp, proc, endop, read, write, lf,
+    call, ret, push, ldp, proc, end, read, write, lf,
 }opcode; // Execute 함수 case문에서 사용
 
 std::string opcodeName[NO_OPCODE] =
@@ -119,14 +119,16 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                     else
                     {
-                        //param[i] = atoi(*arr); //ascii to Integer -> String
-                        
-                        param[i] = *arr;
-                       
+                        param[i] = *arr;         
                     }
                 }
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
+
+                if (inst == "bgn") {
+                    PC = lineCount;
+                    mMemory.AddMemory(std::stoi(param[0]), "bgn");
+                }
 
                 Instructions.push_back(instruction);
 
@@ -156,7 +158,7 @@ void UCodeInterpreter::ReadFile(std::string path)
                         param[i] = atoi(*arr);
                     }
                 }
-
+                
                 if (inst == "bgn") PC = lineCount;
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
@@ -252,14 +254,25 @@ void UCodeInterpreter::Execute(int now)
 
     switch (inst)//switch문에서는 str못 넣어서 enum값 사용
     {
+
+    case opcode::proc:
+    {
+        int variableSize = std::stoi(Instructions[now].param1);
+        
+        mMemory.AddMemory(variableSize, "proc");
+        break;
+    }
+
         // 함수 정의 및 호출  확실 x
     case opcode::ret:
     {
-        int origin = topstack.top();
-        topstack.pop();
+        mMemory.RemoveMemory();
 
-        mCPU.top() = origin;
-        PC = mCPU.top();
+     /*    int origin = topstack.top();
+            topstack.pop();
+
+            mCPU.top() = origin;
+            PC = mCPU.top();*/
         break;
     }
 
@@ -565,18 +578,44 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-    mMemory.SetMemoryValue(1, 0, 0);
 
-    ui.MemoryTable->setRowCount(1);
 
-    ui.MemoryTable->setItem(0, 0, new QTableWidgetItem(QString::number(mMemory.GetMemoryValue(0, 0))));
-
-    PrintCPUStack();
+    UCodeInterpreter::PrintCPUStack();
+    UCodeInterpreter::PrintMemory();
 
 }
+//GUI MemoryStack 출력
+void UCodeInterpreter::PrintMemory() {
 
+    std::vector<int>* tmpMemory = mMemory.GetMemoryStack();
+
+    ui.MemoryTable->setRowCount(0);
+    
+    for (int i = 0; i < tmpMemory[0].size(); i++) {
+        if (tmpMemory[0][i] != -1) {
+            ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
+            //block, offset, value
+            
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem("1"));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(i)));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpMemory[0][i])));
+        }
+    }
+
+    for (int i = 0; i < tmpMemory[1].size(); i++) {
+        if (tmpMemory[1][i] != -1) {
+            ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
+            
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem("2"));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(i)));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpMemory[1][i])));
+        }
+    }
+}
 //GUI CPUStack 출력
 void UCodeInterpreter::PrintCPUStack() {
+
+    ui.tableWidget->selectRow(PC);
 
     std::stack<int> tmp = mCPU;
     std::vector<int> vec;
