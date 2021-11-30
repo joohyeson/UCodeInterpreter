@@ -17,16 +17,17 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
     ui.tableWidget_2->setColumnWidth(0, 230);
     ui.tableWidget_2->setColumnWidth(1, 230);
 
+    connect(ui.pushButton_2, &QPushButton::clicked, this, &UCodeInterpreter::On_StepButton_Clicked);
     connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
+    connect(ui.pushButton_4, &QPushButton::clicked, this, &UCodeInterpreter::On_RunButton_Clicked);
     connect(ui.pushButton_5, &QPushButton::clicked, this, &UCodeInterpreter::On_CreateLstButton_Clicked);
-    connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
+    connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked); 
 }
 
 void UCodeInterpreter::On_ReadUcoButton_Clicked()
 {
     ReadFile(QFileDialog::getOpenFileName(this, "Search File", QDir::currentPath(), "Files(*.uco)").toStdString());
     Assemble();
-    Execute();
 }
 
 void UCodeInterpreter::On_CreateLstButton_Clicked()
@@ -37,6 +38,29 @@ void UCodeInterpreter::On_CreateLstButton_Clicked()
 void UCodeInterpreter::On_ExitButton_Clicked()
 {
     this->close();
+}
+
+void UCodeInterpreter::On_StepButton_Clicked()
+{
+    if (hasInstructions == true)
+    {
+        Execute(nowLocation);
+        nowLocation++;
+    }
+    else
+    {
+        return;
+    }
+}
+
+void UCodeInterpreter::On_RunButton_Clicked()
+{
+    while (hasInstructions == true) {
+        Execute(nowLocation);
+        nowLocation++;
+    }
+
+    return;
 }
 
 typedef enum opcode {
@@ -197,338 +221,330 @@ void UCodeInterpreter::Assemble()
     }
 }
 
-void UCodeInterpreter::Execute()
+void UCodeInterpreter::Execute(int now)
 {
-    int tmpPc = 0;
+    enum opcode inst;    // 열거형 변수 선언
 
-    for (int i = 0; i < Instructions.size(); i++)
+    for (int j = 0; j < 40; j++)
     {
-        enum opcode inst;    // 열거형 변수 선언
-
-        for (int j = 0; j < 40; j++)
+        if (opcodeName[j] == Instructions[now].inst)
         {
-            if (opcodeName[j] == Instructions[i].inst)
-            {
-                inst = static_cast<opcode>(j);
-            }//enum 변수값 찾아서 초기화해줌
-        }
+            inst = static_cast<opcode>(j);
+        }//enum 변수값 찾아서 초기화해줌
+    }
 
-        switch (inst)//switch문에서는 str못 넣어서 enum값 사용
+    if (Instructions[now].inst=="end") {
+        hasInstructions == false;
+        return;
+    }
+
+    switch (inst)//switch문에서는 str못 넣어서 enum값 사용
+    {
+        // 함수 정의 및 호출
+    case opcode::ret:
+    {
+
+        break;
+    }
+
+    case opcode::ldp:
+    {
+        break;
+    }
+
+    case opcode::push:
+    {
+        break;
+    }
+
+    case opcode::call:
+    {
+        break;
+    }
+
+    // 흐름 제어
+    case opcode::ujp:
+    {
+        int location = Instructions[now].param1;
+        pc = Labels[location].addr;
+        break;
+    }
+
+    case opcode::tjp:
+    {
+        if (mCPU.top() != 0)
         {
-        // 함수 정의 및 호출  확실 x
-        case opcode::ret:
-        {
-            int origin = topstack.top();
-            topstack.pop();
-
-            mCPU.top() = origin;
-            pc = mCPU.top();
-            break;
-        }
-
-        case opcode::ldp:
-        {
-            break;
-        }
-
-        case opcode::push:
-        {
-            int origin = mCPU.top();
-
-            mMemory.SetMemoryValue(origin);
-
-            break;
-        }
-
-        case opcode::call:
-        {
-
-            break;
-        }
-
-        // 흐름 제어
-        case opcode::ujp:
-        {
-            int location = Instructions[i].param1;
+            int location = Instructions[now].param1;
             pc = Labels[location].addr;
-            break;
         }
+        break;
+    }
 
-        case opcode::tjp:
+    case opcode::fjp:
+    {
+        if (mCPU.top() == 0)
         {
-            if (mCPU.top() != 0)
-            {
-                int location = Instructions[i].param1;
-                pc = Labels[location].addr;
-            }
-            break;
+            int location = Instructions[now].param1;
+            pc = Labels[location].addr;
         }
+        break;
+    }
 
-        case opcode::fjp:
-        {
-            if (mCPU.top() == 0)
-            {
-                int location = Instructions[i].param1;
-                pc = Labels[location].addr;
-            }
-            break;
-        }
+    // 단항 연산자
+    case opcode::not:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
 
-        // 단항 연산자
-        case opcode::not:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
+        mCPU.push(!origin);
+        break;
+    }
 
-            mCPU.push(!origin);
-            break;
-        }
+    case opcode::neg:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
 
-        case opcode::neg:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
+        mCPU.push(-1 * origin);
+        break;
+    }
 
-            mCPU.push(-1 * origin);
-            break;
-        }
+    case opcode::inc:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
 
-        case opcode::inc:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
+        mCPU.push(++origin);
+        break;
+    }
 
-            mCPU.push(++origin);
-            break;
-        }
+    case opcode::dec:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
 
-        case opcode::dec:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
+        mCPU.push(--origin);
+        break;
+    }
 
-            mCPU.push(--origin);
-            break;
-        }
+    case opcode::dup:
+    {
+        int origin = mCPU.top();
 
-        case opcode::dup:
-        {
-            int origin = mCPU.top();
+        mCPU.push(origin);
+        break;
+    }
 
-            mCPU.push(origin);
-            break;
-        }
+    // 이항 연산자
+    case opcode::add:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        // 이항 연산자
-        case opcode::add:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp + origin);
+        break;
+    }
 
-            mCPU.push(cmp + origin);
-            break;
-        }
+    case opcode::sub:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::sub:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp - origin);
+        break;
+    }
 
-            mCPU.push(cmp - origin);
-            break;
-        }
+    case opcode::mult:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::mult:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp * origin);
+        break;
+    }
 
-            mCPU.push(cmp * origin);
-            break;
-        }
+    case opcode::divop:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::divop:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp / origin);
+        break;
+    }
 
-            mCPU.push(cmp / origin);
-            break;
-        }
+    case opcode::mod:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::mod:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp % origin);
+        break;
+    }
 
-            mCPU.push(cmp % origin);
-            break;
-        }
+    case opcode::gt:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::gt:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp > origin);
+        break;
+    }
 
-            mCPU.push(cmp > origin);
-            break;
-        }
-           
-        case opcode::lt:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+    case opcode::lt:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-            mCPU.push(cmp < origin);
-            break;
-        }
-           
-        case opcode::ge:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp < origin);
+        break;
+    }
 
-            mCPU.push(cmp >= origin);
-            break;
-        }
-            
-        case opcode::le:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+    case opcode::ge:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-            mCPU.push(cmp <= origin);
-            break;
-        }
-            
-        case eq:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp >= origin);
+        break;
+    }
 
-            mCPU.push(cmp == origin);
-            break;
-        }
-           
+    case opcode::le:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::ne:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp <= origin);
+        break;
+    }
 
-            mCPU.push(cmp != origin);
-            break;
-        }
+    case eq:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::and:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+        mCPU.push(cmp == origin);
+        break;
+    }
 
-            mCPU.push(cmp && origin);
-            break;
-        }
 
-        case opcode:: or:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+    case opcode::ne:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-            mCPU.push(cmp || origin);
-            break;
-        }
+        mCPU.push(cmp != origin);
+        break;
+    }
 
-        case opcode::swp:
-        {
-            int origin = mCPU.top();
-            mCPU.pop();
-            int cmp = mCPU.top();
-            mCPU.pop();
+    case opcode::and :
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-            mCPU.push(origin);
-            mCPU.push(cmp);
-            break;
-        }
+        mCPU.push(cmp && origin);
+        break;
+    }
 
-        case opcode::lod: {
+    case opcode:: or :
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-            int value = mMemory.GetMemoryValue(Instructions[i].param1, Instructions[i].param2);
-            mCPU.push(value);
-            break;
+        mCPU.push(cmp || origin);
+        break;
+    }
 
-        }
+    case opcode::swp:
+    {
+        int origin = mCPU.top();
+        mCPU.pop();
+        int cmp = mCPU.top();
+        mCPU.pop();
 
-        case opcode::lda: {//확실 x
-            int value = mMemory.GetMemoryAddress(Instructions[i].param1, Instructions[i].param2);
-            mCPU.push(value);
-            break;
-        }
-        case opcode::ldc: {
-            mCPU.push(Instructions[i].param1);
+        mCPU.push(origin);
+        mCPU.push(cmp);
+        break;
+    }
 
-            break;
-        }
+    case opcode::lod: {
 
-        case opcode::str: {
-            int origin = mCPU.top();
-            mCPU.pop();
+        int value = mMemory.GetMemoryValue(Instructions[now].param1, Instructions[now].param2);
+        mCPU.push(value);
+        break;
 
-            mMemory.SetMemoryValue(origin, Instructions[i].param1, Instructions[i].param2);
-            break;
-        }
-        case opcode::ldi: {
-            int origin = mCPU.top();
-            mCPU.pop();
+    }
 
-            mCPU.push(mMemory.GetMemoryValue(origin));
-            break;
-        }
+    case opcode::lda: {//확실 x
+        int value = mMemory.GetMemoryAddress(Instructions[now].param1, Instructions[now].param2);
+        mCPU.push(value);
+        break;
+    }
+    case opcode::ldc: {
+        mCPU.push(Instructions[now].param1);
 
-        case opcode::sti: {
-            int value = mCPU.top();
-            mCPU.pop();
+        break;
+    }
 
-            int addr = mCPU.top();
-            mCPU.pop();
+    case opcode::str: {
+        int origin = mCPU.top();
+        mCPU.pop();
 
-            mMemory.SetMemoryValue(value, addr);
-            break;
-        }
+        mMemory.SetMemoryValue(origin, Instructions[now].param1, Instructions[now].param2);
+        break;
+    }
+    case opcode::ldi: {
+        int origin = mCPU.top();
+        mCPU.pop();
 
-        default:
-            break;
-        }
+        mCPU.push(mMemory.GetMemoryValue(origin));
+        break;
+    }
+
+    case opcode::sti: {
+        int value = mCPU.top();
+        mCPU.pop();
+
+        int addr = mCPU.top();
+        mCPU.pop();
+
+        mMemory.SetMemoryValue(value, addr);
+        break;
+    }
+
+    default:
+        break;
     }
 }
+
 
 void UCodeInterpreter::CreateFile(std::string path)
 {
     std::ofstream os(path, std::ofstream::out, std::ofstream::binary);
-    
+
 }

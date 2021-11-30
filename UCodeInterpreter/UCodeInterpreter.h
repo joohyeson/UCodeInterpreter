@@ -21,7 +21,7 @@ public:
     void ReadFile(std::string path);
     int GetParamCount(std::string ins);
     void Assemble();
-    void Execute();
+    void Execute(int now);
     void Statistics() {};
     void CreateFile(std::string path);
 
@@ -29,6 +29,8 @@ private slots:
     void On_ReadUcoButton_Clicked();
     void On_CreateLstButton_Clicked();
     void On_ExitButton_Clicked();
+    void On_StepButton_Clicked();
+    void On_RunButton_Clicked();
 
 private:
     Ui::UCodeInterpreterClass ui;
@@ -37,5 +39,7 @@ private:
     std::stack<int> topstack;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
+    bool hasInstructions = true;
+    int nowLocation = 0;
     int pc;
 };
