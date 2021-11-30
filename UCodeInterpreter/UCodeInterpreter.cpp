@@ -292,9 +292,12 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::call:
     {
-        //if (!strcmp(Instructions[now].param1, ))
+        for (int i = 0; i < Labels.size(); i++)
         {
-
+            if (Instructions[now].param1 == Labels[i].label)
+            {
+                PC = Labels[i].addr - 1;
+            }
         }
         break;
     }
