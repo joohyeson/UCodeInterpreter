@@ -5,11 +5,11 @@ public:
     std::string label;
     std::string inst;
 
-    int param1;
-    int param2;
-    int param3;
+    std::string param1;
+    std::string param2;
+    std::string param3;
 
-    Instruction(std::string a, std::string b, int p1, int p2, int p3)
+    Instruction(std::string a, std::string b, std::string p1, std::string p2, std::string p3)
     {
         label = a;
         inst = b;

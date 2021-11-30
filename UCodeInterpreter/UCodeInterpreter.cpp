@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <iostream>
+#include <cctype>
 
 UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
@@ -95,7 +96,7 @@ void UCodeInterpreter::ReadFile(std::string path)
             {
                 std::string label;
 
-                int param[3] = { -1, -1, -1 };
+                std::string param[3] = { "", "", "" };
 
                 char* arr[1024];
                 *arr = strtok(&nowLine[0], " ");
@@ -112,7 +113,10 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                     else
                     {
-                        param[i] = atoi(*arr);
+                        //param[i] = atoi(*arr); //ascii to Integer -> String
+                        
+                        param[i] = *arr;
+                       
                     }
                 }
 
@@ -123,7 +127,7 @@ void UCodeInterpreter::ReadFile(std::string path)
             }
             else //label 있는 경우
             {
-                int param[3] = { -1, -1, -1 };
+                std::string param[3] = { "", "", "" };
 
                 char* arr[1024];
 
@@ -207,9 +211,9 @@ void UCodeInterpreter::Assemble()
 
         ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::fromStdString(Instructions[i].label)));
         ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 1, new QTableWidgetItem(QString::fromStdString(Instructions[i].inst)));
-        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 2, new QTableWidgetItem(QString::number(Instructions[i].param1)));
-        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 3, new QTableWidgetItem(QString::number(Instructions[i].param2)));
-        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 4, new QTableWidgetItem(QString::number(Instructions[i].param3)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 2, new QTableWidgetItem(QString::fromStdString(Instructions[i].param1)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 3, new QTableWidgetItem(QString::fromStdString(Instructions[i].param2)));
+        ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 4, new QTableWidgetItem(QString::fromStdString(Instructions[i].param3)));
     }
 
     for (int i = 0; i < Labels.size(); i++)
@@ -267,14 +271,17 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::call:
     {
+        //if (!strcmp(Instructions[now].param1, ))
+        {
 
+        }
         break;
     }
 
     // 흐름 제어
     case opcode::ujp:
     {
-        int location = Instructions[now].param1;
+        int location = std::stoi(Instructions[now].param1);
         pc = Labels[location].addr;
         break;
     }
@@ -283,7 +290,7 @@ void UCodeInterpreter::Execute(int now)
     {
         if (mCPU.top() != 0)
         {
-            int location = Instructions[now].param1;
+            int location = std::stoi(Instructions[now].param1);
             pc = Labels[location].addr;
         }
         break;
@@ -293,7 +300,7 @@ void UCodeInterpreter::Execute(int now)
     {
         if (mCPU.top() == 0)
         {
-            int location = Instructions[now].param1;
+            int location = std::stoi(Instructions[now].param1);
             pc = Labels[location].addr;
         }
         break;
@@ -503,19 +510,19 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::lod: {
 
-        int value = mMemory.GetMemoryValue(Instructions[now].param1, Instructions[now].param2);
+        int value = mMemory.GetMemoryValue(std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         mCPU.push(value);
         break;
 
     }
 
     case opcode::lda: {//확실 x
-        int value = mMemory.GetMemoryAddress(Instructions[now].param1, Instructions[now].param2);
+        int value = mMemory.GetMemoryAddress(std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         mCPU.push(value);
         break;
     }
     case opcode::ldc: {
-        mCPU.push(Instructions[now].param1);
+        mCPU.push(std::stoi(Instructions[now].param1));
 
         break;
     }
@@ -524,7 +531,7 @@ void UCodeInterpreter::Execute(int now)
         int origin = mCPU.top();
         mCPU.pop();
 
-        mMemory.SetMemoryValue(origin, Instructions[now].param1, Instructions[now].param2);
+        mMemory.SetMemoryValue(origin, std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         break;
     }
     case opcode::ldi: {
