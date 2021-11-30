@@ -51,8 +51,8 @@ void UCodeInterpreter::On_StepButton_Clicked()
 {
     if (hasInstructions == true)
     {
-        Execute(nowLocation);
-        nowLocation++;
+        Execute(PC);
+        PC++;
     }
     else
     {
@@ -63,8 +63,8 @@ void UCodeInterpreter::On_StepButton_Clicked()
 void UCodeInterpreter::On_RunButton_Clicked()
 {
     while (hasInstructions == true) {
-        Execute(nowLocation);
-        nowLocation++;
+        Execute(PC);
+        PC++;
     }
 
     return;
@@ -257,7 +257,7 @@ void UCodeInterpreter::Execute(int now)
         topstack.pop();
 
         mCPU.top() = origin;
-        pc = mCPU.top();
+        PC = mCPU.top();
         break;
     }
 
@@ -288,7 +288,7 @@ void UCodeInterpreter::Execute(int now)
     case opcode::ujp:
     {
         int location = std::stoi(Instructions[now].param1);
-        pc = Labels[location].addr;
+        PC = Labels[location].addr;
         break;
     }
 
@@ -297,7 +297,7 @@ void UCodeInterpreter::Execute(int now)
         if (mCPU.top() != 0)
         {
             int location = std::stoi(Instructions[now].param1);
-            pc = Labels[location].addr;
+            PC = Labels[location].addr;
         }
         break;
     }
@@ -307,7 +307,7 @@ void UCodeInterpreter::Execute(int now)
         if (mCPU.top() == 0)
         {
             int location = std::stoi(Instructions[now].param1);
-            pc = Labels[location].addr;
+            PC = Labels[location].addr;
         }
         break;
     }
