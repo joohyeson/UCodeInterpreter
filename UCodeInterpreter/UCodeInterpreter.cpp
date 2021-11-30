@@ -4,8 +4,7 @@
 #include <QDebug>
 #include <iostream>
 
-UCodeInterpreter::UCodeInterpreter(QWidget* parent)
-    : QMainWindow(parent)
+UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
 
@@ -19,6 +18,7 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent)
     ui.tableWidget_2->setColumnWidth(1, 230);
 
     connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
+    connect(ui.pushButton_5, &QPushButton::clicked, this, &UCodeInterpreter::On_CreateLstButton_Clicked);
     connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
 }
 
@@ -27,6 +27,11 @@ void UCodeInterpreter::On_ReadUcoButton_Clicked()
     ReadFile(QFileDialog::getOpenFileName(this, "Search File", QDir::currentPath(), "Files(*.uco)").toStdString());
     Assemble();
     Execute();
+}
+
+void UCodeInterpreter::On_CreateLstButton_Clicked()
+{
+    CreateFile(QFileDialog::getSaveFileName(this, "Save File", QDir::currentPath(), "Files(*.lst)").toStdString());
 }
 
 void UCodeInterpreter::On_ExitButton_Clicked()
@@ -51,7 +56,7 @@ std::string opcodeName[NO_OPCODE] =
 
 void UCodeInterpreter::ReadFile(std::string path)
 {
-    std::ifstream is(path, std::ifstream::binary);
+    std::ifstream is(path, std::ifstream::in, std::ifstream::binary);
     std::string nowLine;
     std::string lines;
 
@@ -65,7 +70,6 @@ void UCodeInterpreter::ReadFile(std::string path)
             if (nowLine[0] == ' ')//label이 없는 경우
             {
                 std::string label;
-
 
                 int param[3] = { -1, -1, -1 };
 
@@ -122,7 +126,7 @@ void UCodeInterpreter::ReadFile(std::string path)
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
                 LabelInfo tmpLabel;
-                tmpLabel.addr = lineCount;
+                tmpLabel.addr = lineCount + 1;
                 tmpLabel.label = label;
 
                 Instructions.push_back(instruction);
@@ -132,7 +136,7 @@ void UCodeInterpreter::ReadFile(std::string path)
         }
     }
 
-    // ui.textEdit->setText(QString::fromStdString(lines));
+    //ui.textEdit->setText(QString::number(Labels[1].addr));
 
 }
 
@@ -209,6 +213,56 @@ void UCodeInterpreter::Execute()
 
         switch (inst)//switch문에서는 str못 넣어서 enum값 사용
         {
+        // 함수 정의 및 호출
+        case opcode::ret:
+        {
+            
+            break;
+        }
+
+        case opcode::ldp:
+        {
+            break;
+        }
+
+        case opcode::push:
+        {
+            break;
+        }
+
+        case opcode::call:
+        {
+            break;
+        }
+
+        // 흐름 제어
+        case opcode::ujp:
+        {
+            int location = Instructions[i].param1;
+            pc = Labels[location].addr;
+            break;
+        }
+
+        case opcode::tjp:
+        {
+            if (mCPU.top() != 0)
+            {
+                int location = Instructions[i].param1;
+                pc = Labels[location].addr;
+            }
+            break;
+        }
+
+        case opcode::fjp:
+        {
+            if (mCPU.top() == 0)
+            {
+                int location = Instructions[i].param1;
+                pc = Labels[location].addr;
+            }
+            break;
+        }
+
         // 단항 연산자
         case opcode::not:
         {
@@ -224,7 +278,7 @@ void UCodeInterpreter::Execute()
             int origin = mCPU.top();
             mCPU.pop();
 
-            mCPU.push(-origin);
+            mCPU.push(-1 * origin);
             break;
         }
 
@@ -415,4 +469,10 @@ void UCodeInterpreter::Execute()
             break;
         }
     }
+}
+
+void UCodeInterpreter::CreateFile(std::string path)
+{
+    std::ofstream os(path, std::ofstream::out, std::ofstream::binary);
+    
 }

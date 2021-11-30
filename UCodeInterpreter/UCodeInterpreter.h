@@ -20,9 +20,11 @@ public:
     void Assemble();
     void Execute();
     void Statistics() {};
+    void CreateFile(std::string path);
 
 private slots:
     void On_ReadUcoButton_Clicked();
+    void On_CreateLstButton_Clicked();
     void On_ExitButton_Clicked();
 
 private:
@@ -31,4 +33,7 @@ private:
     std::stack<int> mCPU;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
+    int pc;
+    int BP;
+    int SP;
 };
