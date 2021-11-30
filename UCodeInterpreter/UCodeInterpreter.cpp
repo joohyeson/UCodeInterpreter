@@ -186,7 +186,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
     std::string param2Inst[] = { "lod", "lda", "str" };
     std::string param3Inst[] = { "sym" };
 
-    for (int i = 0; i < param1Inst->size(); i++)
+    for (int i = 0; i < 7; i++)//param1개수만큼
     {
         if (param1Inst[i] == ins)
         {
@@ -194,7 +194,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
         }
     }
 
-    for (int i = 0; i < param2Inst->size(); i++)
+    for (int i = 0; i < 3; i++)
     {
         if (param2Inst[i] == ins)
         {
@@ -202,7 +202,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
         }
     }
 
-    for (int i = 0; i < param3Inst->size(); i++)
+    for (int i = 0; i < 1; i++)
     {
         if (param3Inst[i] == ins)
         {
