@@ -1,13 +1,11 @@
 #include "UCodeInterpreter.h"
 #include <fstream>
 #include <QFileDialog>
-#include <QDialog>
 #include <QDebug>
 #include <iostream>
 #include <cctype>
 
-UCodeInterpreter::UCodeInterpreter(QWidget* parent)
-    : QMainWindow(parent)
+UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
 
@@ -20,11 +18,17 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent)
     ui.tableWidget_2->setColumnWidth(0, 230);
     ui.tableWidget_2->setColumnWidth(1, 230);
 
+    ui.CPUStackTable->setColumnWidth(0, 150);
+
+    ui.MemoryTable->setColumnWidth(0, 75);
+    ui.MemoryTable->setColumnWidth(1, 75);
+    ui.MemoryTable->setColumnWidth(2, 80);
+
     connect(ui.pushButton_2, &QPushButton::clicked, this, &UCodeInterpreter::On_StepButton_Clicked);
     connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
     connect(ui.pushButton_4, &QPushButton::clicked, this, &UCodeInterpreter::On_RunButton_Clicked);
     connect(ui.pushButton_5, &QPushButton::clicked, this, &UCodeInterpreter::On_CreateLstButton_Clicked);
-    connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked); 
+    connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
 }
 
 void UCodeInterpreter::On_ReadUcoButton_Clicked()
@@ -47,8 +51,8 @@ void UCodeInterpreter::On_StepButton_Clicked()
 {
     if (hasInstructions == true)
     {
-        Execute(nowLocation);
-        nowLocation++;
+        Execute(PC);
+        PC++;
     }
     else
     {
@@ -59,8 +63,8 @@ void UCodeInterpreter::On_StepButton_Clicked()
 void UCodeInterpreter::On_RunButton_Clicked()
 {
     while (hasInstructions == true) {
-        Execute(nowLocation);
-        nowLocation++;
+        Execute(PC);
+        PC++;
     }
 
     return;
@@ -70,7 +74,7 @@ typedef enum opcode {
     nop, bgn, sym, lod, lda, ldc, str, ldi, sti,
     not, neg, inc, dec, dup, add, sub, mult, divop, mod,
     gt, lt, ge, le, eq, ne, and, or , swp, ujp, tjp, fjp,
-    call, ret, push, ldp, proc, endop, read, write, lf,
+    call, ret, push, ldp, proc, end, read, write, lf,
 }opcode; // Execute 함수 case문에서 사용
 
 std::string opcodeName[NO_OPCODE] =
@@ -114,12 +118,17 @@ void UCodeInterpreter::ReadFile(std::string path)
                         break;
                     }
                     else
-                    {                        
-                        param[i] = *arr;
+                    {
+                        param[i] = *arr;         
                     }
                 }
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
+
+                if (inst == "bgn") {
+                    PC = lineCount;
+                    mMemory.AddMemory(std::stoi(param[0]), "bgn");
+                }
 
                 Instructions.push_back(instruction);
 
@@ -149,6 +158,8 @@ void UCodeInterpreter::ReadFile(std::string path)
                         param[i] = atoi(*arr);
                     }
                 }
+                
+                if (inst == "bgn") PC = lineCount;
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
@@ -227,7 +238,6 @@ void UCodeInterpreter::Assemble()
 void UCodeInterpreter::Execute(int now)
 {
     enum opcode inst;    // 열거형 변수 선언
-    int pcTemp = 0;
 
     for (int j = 0; j < 40; j++)
     {
@@ -237,41 +247,37 @@ void UCodeInterpreter::Execute(int now)
         }//enum 변수값 찾아서 초기화해줌
     }
 
-    if (Instructions[now].inst=="end") {
+    if (Instructions[now].inst == "end") {
         hasInstructions == false;
         return;
     }
 
     switch (inst)//switch문에서는 str못 넣어서 enum값 사용
     {
-    // 함수 정의 및 호출  확실 x
+
+    case opcode::proc:
+    {
+        int variableSize = std::stoi(Instructions[now].param1);
+        
+        mMemory.AddMemory(variableSize, "proc");
+        break;
+    }
+
+        // 함수 정의 및 호출  확실 x
     case opcode::ret:
     {
-        int origin = topstack.top();
-        topstack.pop();
+        mMemory.RemoveMemory();
 
-        mCPU.top() = origin;
-        pc = mCPU.top();
+     /*    int origin = topstack.top();
+            topstack.pop();
+
+            mCPU.top() = origin;
+            PC = mCPU.top();*/
         break;
     }
 
     case opcode::ldp:
     {
-        pcTemp = pc;
-        while (1)
-        {
-            pc++;
-            if (!(Instructions[now].inst == "call"))
-            {
-                break;
-            }
-        }
-        if (!(Instructions[now].param1 == "read") || !(Instructions[now].param1 == "write") || !(Instructions[now].param1 == "lt"))
-        {
-            mCPU.push(pc);
-            topstack.push(mCPU.top());
-        }
-        pc = pcTemp;
         break;
     }
 
@@ -286,17 +292,9 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::call:
     {
-        if (Instructions[now].param1 == "read")
+        //if (!strcmp(Instructions[now].param1, ))
         {
-            while (1)
-            {
-                int meg = 0;
-                QDialog dlg;
-                if (dlg.isModal())
-                {
 
-                }
-            }
         }
         break;
     }
@@ -305,7 +303,7 @@ void UCodeInterpreter::Execute(int now)
     case opcode::ujp:
     {
         int location = std::stoi(Instructions[now].param1);
-        pc = Labels[location].addr;
+        PC = Labels[location].addr;
         break;
     }
 
@@ -314,7 +312,7 @@ void UCodeInterpreter::Execute(int now)
         if (mCPU.top() != 0)
         {
             int location = std::stoi(Instructions[now].param1);
-            pc = Labels[location].addr;
+            PC = Labels[location].addr;
         }
         break;
     }
@@ -324,7 +322,7 @@ void UCodeInterpreter::Execute(int now)
         if (mCPU.top() == 0)
         {
             int location = std::stoi(Instructions[now].param1);
-            pc = Labels[location].addr;
+            PC = Labels[location].addr;
         }
         break;
     }
@@ -485,6 +483,7 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
+
     case opcode::ne:
     {
         int origin = mCPU.top();
@@ -577,6 +576,59 @@ void UCodeInterpreter::Execute(int now)
 
     default:
         break;
+    }
+
+
+
+    UCodeInterpreter::PrintCPUStack();
+    UCodeInterpreter::PrintMemory();
+
+}
+//GUI MemoryStack 출력
+void UCodeInterpreter::PrintMemory() {
+
+    std::vector<int>* tmpMemory = mMemory.GetMemoryStack();
+
+    ui.MemoryTable->setRowCount(0);
+    
+    for (int i = 0; i < tmpMemory[0].size(); i++) {
+        if (tmpMemory[0][i] != -1) {
+            ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
+            //block, offset, value
+            
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem("1"));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(i)));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpMemory[0][i])));
+        }
+    }
+
+    for (int i = 0; i < tmpMemory[1].size(); i++) {
+        if (tmpMemory[1][i] != -1) {
+            ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
+            
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem("2"));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(i)));
+            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpMemory[1][i])));
+        }
+    }
+}
+//GUI CPUStack 출력
+void UCodeInterpreter::PrintCPUStack() {
+
+    ui.tableWidget->selectRow(PC);
+
+    std::stack<int> tmp = mCPU;
+    std::vector<int> vec;
+
+    for (int i = 0; i < mCPU.size(); i++) {
+        vec.push_back(tmp.top());
+        tmp.pop();
+    }
+
+    ui.CPUStackTable->setRowCount(mCPU.size());
+
+    for (int i = 0; i < vec.size(); i++) {
+        ui.CPUStackTable->setItem(i, 0, new QTableWidgetItem(QString::number(vec[i])));
     }
 }
 

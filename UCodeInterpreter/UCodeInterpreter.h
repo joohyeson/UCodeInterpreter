@@ -24,6 +24,8 @@ public:
     void Execute(int now);
     void Statistics() {};
     void CreateFile(std::string path);
+    void PrintCPUStack();
+    void PrintMemory();
 
 private slots:
     void On_ReadUcoButton_Clicked();
@@ -33,6 +35,7 @@ private slots:
     void On_RunButton_Clicked();
 
 private:
+
     Ui::UCodeInterpreterClass ui;
     Memory mMemory;
     std::stack<int> mCPU;
@@ -40,6 +43,6 @@ private:
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
     bool hasInstructions = true;
-    int nowLocation = 0;
-    int pc;
+
+    int PC = 0;
 };
