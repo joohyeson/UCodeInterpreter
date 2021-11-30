@@ -238,6 +238,7 @@ void UCodeInterpreter::Assemble()
 void UCodeInterpreter::Execute(int now)
 {
     enum opcode inst;    // 열거형 변수 선언
+    int pcTemp = 0;
 
     for (int j = 0; j < 40; j++)
     {
@@ -278,6 +279,21 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::ldp:
     {
+        pcTemp = PC;
+        while (1)
+        {
+            PC++;
+            if (!(Instructions[now].inst == "call"))
+            {
+                break;
+            }
+        }
+        if (!(Instructions[now].param1 == "read") || !(Instructions[now].param1 == "write") || !(Instructions[now].param1 == "lt"))
+        {
+            mCPU.push(PC);
+            topstack.push(mCPU.top());
+        }
+        PC = pcTemp;
         break;
     }
 
@@ -292,9 +308,17 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::call:
     {
-        //if (!strcmp(Instructions[now].param1, ))
+        if (Instructions[now].param1 == "read")
         {
+            while (1)
+            {
+                int meg = 0;
+                QDialog dlg;
+                if (dlg.isModal())
+                {
 
+                }
+            }
         }
         break;
     }
