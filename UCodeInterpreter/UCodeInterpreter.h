@@ -24,6 +24,7 @@ public:
     void Execute(int now);
     void Statistics() {};
     void CreateFile(std::string path);
+    void PrintCPUStack();
 
 private slots:
     void On_ReadUcoButton_Clicked();

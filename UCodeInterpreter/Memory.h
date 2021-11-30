@@ -25,8 +25,11 @@ public:
     void SetMemoryValue(int value, int block, int offset)
     {
         //어디서 size 안 늘려주면 터질듯
+        if (MemoryStack[block-1].size() <= offset) {
+            MemoryStack[block-1].resize(offset + 1);
+        }
 
-        MemoryStack[block][offset]=value;
+        MemoryStack[block-1][offset]=value;
     }
 
     void SetMemoryValue(int value, int addr)

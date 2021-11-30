@@ -17,11 +17,17 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
     ui.tableWidget_2->setColumnWidth(0, 230);
     ui.tableWidget_2->setColumnWidth(1, 230);
 
+    ui.CPUStackTable->setColumnWidth(0, 150);
+
+    ui.MemoryTable->setColumnWidth(0, 75);
+    ui.MemoryTable->setColumnWidth(1, 75);
+    ui.MemoryTable->setColumnWidth(2, 80);
+
     connect(ui.pushButton_2, &QPushButton::clicked, this, &UCodeInterpreter::On_StepButton_Clicked);
     connect(ui.pushButton_3, &QPushButton::clicked, this, &UCodeInterpreter::On_ReadUcoButton_Clicked);
     connect(ui.pushButton_4, &QPushButton::clicked, this, &UCodeInterpreter::On_RunButton_Clicked);
     connect(ui.pushButton_5, &QPushButton::clicked, this, &UCodeInterpreter::On_CreateLstButton_Clicked);
-    connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked); 
+    connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
 }
 
 void UCodeInterpreter::On_ReadUcoButton_Clicked()
@@ -233,14 +239,14 @@ void UCodeInterpreter::Execute(int now)
         }//enum 변수값 찾아서 초기화해줌
     }
 
-    if (Instructions[now].inst=="end") {
+    if (Instructions[now].inst == "end") {
         hasInstructions == false;
         return;
     }
 
     switch (inst)//switch문에서는 str못 넣어서 enum값 사용
     {
-    // 함수 정의 및 호출  확실 x
+        // 함수 정의 및 호출  확실 x
     case opcode::ret:
     {
         int origin = topstack.top();
@@ -549,8 +555,34 @@ void UCodeInterpreter::Execute(int now)
     default:
         break;
     }
+
+    mMemory.SetMemoryValue(1, 0, 0);
+
+    ui.MemoryTable->setRowCount(1);
+
+    ui.MemoryTable->setItem(0, 0, new QTableWidgetItem(QString::number(mMemory.GetMemoryValue(0, 0))));
+
+    PrintCPUStack();
+
 }
 
+//GUI CPUStack 출력
+void UCodeInterpreter::PrintCPUStack() {
+
+    std::stack<int> tmp = mCPU;
+    std::vector<int> vec;
+
+    for (int i = 0; i < mCPU.size(); i++) {
+        vec.push_back(tmp.top());
+        tmp.pop();
+    }
+
+    ui.CPUStackTable->setRowCount(mCPU.size());
+
+    for (int i = 0; i < vec.size(); i++) {
+        ui.CPUStackTable->setItem(i, 0, new QTableWidgetItem(QString::number(vec[i])));
+    }
+}
 
 void UCodeInterpreter::CreateFile(std::string path)
 {
