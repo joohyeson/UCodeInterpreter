@@ -157,6 +157,8 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                 }
 
+                if (inst == "bgn") PC = lineCount;
+
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
                 LabelInfo tmpLabel;
