@@ -3,9 +3,18 @@
 #include "MemoryInfo.h"
 
 class Memory {
+public:
+
+    int GetMemoryValue(int block, int offset)
+    {
+        
+    }
+
+
+    
 
 private:
     int BP;
     int SP;
-    std::stack<MemoryInfo> MemoryStack;
+    std::vector<MemoryInfo> MemoryStack;
 };
