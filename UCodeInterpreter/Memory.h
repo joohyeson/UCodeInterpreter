@@ -40,8 +40,8 @@ public:
 
     void AddMemory(int value, std::string op) {
         if (op == "proc") {
-            MemoryStack[1].resize(MemoryStack[1].size() + value,-1);
-            
+            MemoryStack[1].resize(MemoryStack[1].size() + value, -1);
+
 
             if (BP == -1) {
                 BP = 0;
@@ -56,16 +56,21 @@ public:
         }
         else
         {
-            MemoryStack[0].resize(value,-1);
+            MemoryStack[0].resize(value, -1);
         }
     }
 
     void RemoveMemory() {
-        
+
         MemoryStack[1].resize(BP);//할당됐던 메모리를 풀어줌
         BP -= BlockSize[BlockSize.size() - 2];//이전 함수 메모리 블럭의 시작 위치로 이동
 
         BlockSize.pop_back();
+    }
+
+    void ReadyMemory()
+    {
+    
     }
 
     std::vector<int>* GetMemoryStack() {

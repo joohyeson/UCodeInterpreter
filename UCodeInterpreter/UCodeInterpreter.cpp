@@ -239,6 +239,8 @@ void UCodeInterpreter::Execute(int now)
 {
     enum opcode inst;    // 열거형 변수 선언
 
+    int pcTemp = 0;
+
     for (int j = 0; j < 40; j++)
     {
         if (opcodeName[j] == Instructions[now].inst)
@@ -268,18 +270,35 @@ void UCodeInterpreter::Execute(int now)
     {
         mMemory.RemoveMemory();
 
-     /*    int origin = topstack.top();
-            topstack.pop();
+        int origin = topstack.top();
+        topstack.pop();
 
-            mCPU.top() = origin;
-            PC = mCPU.top();*/
+        mCPU.top() = origin;
+        PC = mCPU.top();
         break;
     }
 
     case opcode::ldp:
     {
+        pcTemp = PC;
+        while (1)
+        {
+            PC++;
+            if (!(Instructions[now].inst == "call"))
+            {
+                break;
+            }
+        }
+        if (!(Instructions[now].param1 == "read") || !(Instructions[now].param1 == "write") || !(Instructions[now].param1 == "lt"))
+        {
+            mCPU.push(PC);
+            int origin = mCPU.top();
+            topstack.push(origin);
+        }
+        PC = pcTemp;
         break;
     }
+
 
     case opcode::push:
     {
@@ -580,8 +599,6 @@ void UCodeInterpreter::Execute(int now)
     default:
         break;
     }
-
-
 
     UCodeInterpreter::PrintCPUStack();
     UCodeInterpreter::PrintMemory();
