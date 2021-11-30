@@ -465,6 +465,51 @@ void UCodeInterpreter::Execute()
             break;
         }
 
+        case opcode::lod: {
+
+            int value = mMemory.GetMemoryValue(Instructions[i].param1, Instructions[i].param2);
+            mCPU.push(value);
+            break;
+
+        }
+
+        case opcode::lda: {//È®½Ç x
+            int value = mMemory.GetMemoryAddress(Instructions[i].param1, Instructions[i].param2);
+            mCPU.push(value);
+            break;
+        }
+        case opcode::ldc: {
+            mCPU.push(Instructions[i].param1);
+
+            break;
+        }
+
+        case opcode::str: {
+            int origin = mCPU.top();
+            mCPU.pop();
+
+            mMemory.SetMemoryValue(origin, Instructions[i].param1, Instructions[i].param2);
+            break;
+        }
+        case opcode::ldi: {
+            int origin = mCPU.top();
+            mCPU.pop();
+
+            mCPU.push(mMemory.GetMemoryValue(origin));
+            break;
+        }
+
+        case opcode::sti: {
+            int value = mCPU.top();
+            mCPU.pop();
+
+            int addr = mCPU.top();
+            mCPU.pop();
+
+            mMemory.SetMemoryValue(value, addr);
+            break;
+        }
+
         default:
             break;
         }
