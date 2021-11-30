@@ -186,7 +186,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
     std::string param2Inst[] = { "lod", "lda", "str" };
     std::string param3Inst[] = { "sym" };
 
-    for (int i = 0; i < param1Inst->size(); i++)
+    for (int i = 0; i < 7; i++)//param1개수만큼
     {
         if (param1Inst[i] == ins)
         {
@@ -194,7 +194,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
         }
     }
 
-    for (int i = 0; i < param2Inst->size(); i++)
+    for (int i = 0; i < 3; i++)
     {
         if (param2Inst[i] == ins)
         {
@@ -202,7 +202,7 @@ int UCodeInterpreter::GetParamCount(std::string ins)
         }
     }
 
-    for (int i = 0; i < param3Inst->size(); i++)
+    for (int i = 0; i < 1; i++)
     {
         if (param3Inst[i] == ins)
         {
@@ -238,7 +238,6 @@ void UCodeInterpreter::Assemble()
 void UCodeInterpreter::Execute(int now)
 {
     enum opcode inst;    // 열거형 변수 선언
-    int pcTemp = 0;
 
     for (int j = 0; j < 40; j++)
     {
@@ -279,21 +278,6 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::ldp:
     {
-        pcTemp = PC;
-        while (1)
-        {
-            PC++;
-            if (!(Instructions[now].inst == "call"))
-            {
-                break;
-            }
-        }
-        if (!(Instructions[now].param1 == "read") || !(Instructions[now].param1 == "write") || !(Instructions[now].param1 == "lt"))
-        {
-            mCPU.push(PC);
-            topstack.push(mCPU.top());
-        }
-        PC = pcTemp;
         break;
     }
 
@@ -308,16 +292,11 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::call:
     {
-        if (Instructions[now].param1 == "read")
+        for (int i = 0; i < Labels.size(); i++)
         {
-            while (1)
+            if (Instructions[now].param1 == Labels[i].label)
             {
-                int meg = 0;
-                QDialog dlg;
-                if (dlg.isModal())
-                {
-
-                }
+                PC = Labels[i].addr - 1;
             }
         }
         break;
