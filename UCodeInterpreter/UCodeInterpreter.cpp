@@ -155,7 +155,7 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                     else
                     {
-                        param[i] = atoi(*arr);
+                        param[i] = *arr;
                     }
                 }
                 
@@ -599,9 +599,9 @@ void UCodeInterpreter::PrintMemory() {
             ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
             //block, offset, value
             
-            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem("1"));
-            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(i)));
-            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpMemory[0][i])));
+            ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 0, new QTableWidgetItem("1"));
+            ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 1, new QTableWidgetItem(QString::number(i)));
+            ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 2, new QTableWidgetItem(QString::number(tmpMemory[0][i])));
         }
     }
 
@@ -609,9 +609,9 @@ void UCodeInterpreter::PrintMemory() {
         if (tmpMemory[1][i] != -1) {
             ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
             
-            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem("2"));
-            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(i)));
-            ui.MemoryTable->setItem(ui.tableWidget->rowCount() - 1, 0, new QTableWidgetItem(QString::number(tmpMemory[1][i])));
+            ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 0, new QTableWidgetItem("2"));
+            ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 1, new QTableWidgetItem(QString::number(i)));
+            ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 2, new QTableWidgetItem(QString::number(tmpMemory[1][i])));
         }
     }
 }
