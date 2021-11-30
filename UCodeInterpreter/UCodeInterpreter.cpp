@@ -1,11 +1,13 @@
 #include "UCodeInterpreter.h"
 #include <fstream>
 #include <QFileDialog>
+#include <QDialog>
 #include <QDebug>
 #include <iostream>
 #include <cctype>
 
-UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
+UCodeInterpreter::UCodeInterpreter(QWidget* parent)
+    : QMainWindow(parent)
 {
     ui.setupUi(this);
 
@@ -112,11 +114,8 @@ void UCodeInterpreter::ReadFile(std::string path)
                         break;
                     }
                     else
-                    {
-                        //param[i] = atoi(*arr); //ascii to Integer -> String
-                        
+                    {                        
                         param[i] = *arr;
-                       
                     }
                 }
 
@@ -228,6 +227,7 @@ void UCodeInterpreter::Assemble()
 void UCodeInterpreter::Execute(int now)
 {
     enum opcode inst;    // 열거형 변수 선언
+    int pcTemp = 0;
 
     for (int j = 0; j < 40; j++)
     {
@@ -257,6 +257,21 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::ldp:
     {
+        pcTemp = pc;
+        while (1)
+        {
+            pc++;
+            if (!(Instructions[now].inst == "call"))
+            {
+                break;
+            }
+        }
+        if (!(Instructions[now].param1 == "read") || !(Instructions[now].param1 == "write") || !(Instructions[now].param1 == "lt"))
+        {
+            mCPU.push(pc);
+            topstack.push(mCPU.top());
+        }
+        pc = pcTemp;
         break;
     }
 
@@ -271,9 +286,17 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::call:
     {
-        //if (!strcmp(Instructions[now].param1, ))
+        if (Instructions[now].param1 == "read")
         {
+            while (1)
+            {
+                int meg = 0;
+                QDialog dlg;
+                if (dlg.isModal())
+                {
 
+                }
+            }
         }
         break;
     }
@@ -462,7 +485,6 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-
     case opcode::ne:
     {
         int origin = mCPU.top();
@@ -557,7 +579,6 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 }
-
 
 void UCodeInterpreter::CreateFile(std::string path)
 {
