@@ -299,7 +299,6 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-
     case opcode::push:
     {
         int origin = mCPU.top();
@@ -321,7 +320,7 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-    // Èå¸§ Á¦¾î °ÅÁþ: 0 Âü: 1
+    // Èå¸§ Á¦¾î
     case opcode::ujp:
     {
         int location = std::stoi(Instructions[now].param1);
@@ -341,7 +340,7 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::fjp:
     {
-        if (mCPU.top() != 0)
+        if (mCPU.top() == 0)
         {
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
@@ -623,7 +622,7 @@ void UCodeInterpreter::PrintMemory() {
     }
 
     for (int i = 0; i < tmpMemory[1].size(); i++) {
-       // if (tmpMemory[1][i] != -1) {
+        //if (tmpMemory[1][i] != -1) {
             ui.MemoryTable->insertRow(ui.MemoryTable->rowCount());
             
             ui.MemoryTable->setItem(ui.MemoryTable->rowCount() - 1, 0, new QTableWidgetItem("2"));
