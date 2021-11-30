@@ -295,7 +295,7 @@ void UCodeInterpreter::Execute(int now)
             int origin = mCPU.top();
             topstack.push(origin);
         }
-        PC = pcTemp;
+        //PC = pcTemp;
         break;
     }
 
