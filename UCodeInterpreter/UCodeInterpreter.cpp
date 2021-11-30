@@ -330,7 +330,7 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::tjp:
     {
-        if (mCPU.top() == 0)
+        if (mCPU.top() != 0)
         {
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
