@@ -8,6 +8,7 @@
 #include "LabelInfo.h"
 #include "Instruction.h"
 #include <fstream>
+#include <Qmessagebox>
 
 #define NO_OPCODE 40
 
@@ -51,5 +52,7 @@ private:
     std::vector<Instruction> Instructions;
     bool hasInstructions = true;
 
+    QMessageBox msgbox;
+    int filecheck = 0;
     int PC = 0;
 };
