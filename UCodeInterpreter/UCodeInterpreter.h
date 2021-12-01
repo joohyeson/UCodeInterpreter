@@ -46,6 +46,7 @@ private:
     Memory mMemory;
     std::stack<int> mCPU;
     std::stack<int> topstack;
+    std::vector<std::string> Result;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
     bool hasInstructions = true;

@@ -335,10 +335,13 @@ void UCodeInterpreter::Execute(int now)
 
             }
             else if (Instructions[now].param1 == "write") {
+                int origin = mCPU.top();
 
+                Result.push_back(std::to_string(origin));
+                Result.push_back("\t");
             }
             else if (Instructions[now].param1 == "lf") {
-
+                Result.push_back("\n");
             }
             else if (Instructions[now].param1 == Labels[i].label)
             {
