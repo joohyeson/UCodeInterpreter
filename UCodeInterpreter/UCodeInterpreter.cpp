@@ -651,6 +651,12 @@ void UCodeInterpreter::Execute(int now)
     UCodeInterpreter::PrintMemory();
 
 }
+
+void UCodeInterpreter::Statistics()
+{
+    
+}
+
 //GUI MemoryStack 출력
 void UCodeInterpreter::PrintMemory() {
 
@@ -679,6 +685,7 @@ void UCodeInterpreter::PrintMemory() {
        // }
     }
 }
+
 //GUI CPUStack 출력
 void UCodeInterpreter::PrintCPUStack() {
 

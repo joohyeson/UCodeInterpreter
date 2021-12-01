@@ -25,7 +25,7 @@ public:
     int GetParamCount(std::string ins);
     void Assemble();
     void Execute(int now);
-    void Statistics() {};
+    void Statistics();
     void CreateFile(std::string path);
     void PrintCPUStack();
     void PrintMemory();
