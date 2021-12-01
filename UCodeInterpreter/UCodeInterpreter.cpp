@@ -54,6 +54,12 @@ void UCodeInterpreter::On_ExitButton_Clicked()
 
 void UCodeInterpreter::On_StepButton_Clicked()
 {
+    if (filecheck == 0)
+    {
+        msgbox.setText("First read .*uco file");
+        msgbox.exec();
+    }
+
     if (hasInstructions == true)
     {
         Execute(PC);
@@ -67,6 +73,12 @@ void UCodeInterpreter::On_StepButton_Clicked()
 
 void UCodeInterpreter::On_RunButton_Clicked()
 {
+    if (filecheck == 0)
+    {
+        msgbox.setText("First read .*uco file");
+        msgbox.exec();
+    }
+
     while (hasInstructions == true) {
         Execute(PC);
         PC++;
@@ -178,6 +190,7 @@ void UCodeInterpreter::ReadFile(std::string path)
             }
             lineCount++;
         }
+        filecheck++;
     }
 
     //ui.textEdit->setText(QString::number(Labels[1].addr));
@@ -637,6 +650,12 @@ void UCodeInterpreter::Execute(int now)
     UCodeInterpreter::PrintMemory();
 
 }
+
+void UCodeInterpreter::Statistics()
+{
+    
+}
+
 //GUI MemoryStack 출력
 void UCodeInterpreter::PrintMemory() {
 
@@ -665,6 +684,7 @@ void UCodeInterpreter::PrintMemory() {
        // }
     }
 }
+
 //GUI CPUStack 출력
 void UCodeInterpreter::PrintCPUStack() {
 

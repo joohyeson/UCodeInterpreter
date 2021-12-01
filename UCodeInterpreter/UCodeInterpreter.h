@@ -8,6 +8,7 @@
 #include "LabelInfo.h"
 #include "Instruction.h"
 #include <fstream>
+#include <Qmessagebox>
 
 #define NO_OPCODE 40
 
@@ -24,7 +25,7 @@ public:
     int GetParamCount(std::string ins);
     void Assemble();
     void Execute(int now);
-    void Statistics() {};
+    void Statistics();
     void CreateFile(std::string path);
     void PrintCPUStack();
     void PrintMemory();
@@ -48,5 +49,7 @@ private:
     std::vector<Instruction> Instructions;
     bool hasInstructions = true;
 
+    QMessageBox msgbox;
+    int filecheck = 0;
     int PC = 0;
 };
