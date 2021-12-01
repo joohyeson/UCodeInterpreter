@@ -10,6 +10,7 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
 
     ui.setupUi(this);
+    read = new ReadDialog();
     
 
     ui.tableWidget->setColumnWidth(0, 80);
@@ -71,6 +72,11 @@ void UCodeInterpreter::On_RunButton_Clicked()
     }
 
     return;
+}
+
+void UCodeInterpreter::GetReadData(QString str)
+{
+    mCPU.push(std::stoi(str.toStdString()));
 }
 
 typedef enum opcode {
@@ -318,10 +324,10 @@ void UCodeInterpreter::Execute(int now)
 
             if (Instructions[now].param1 == "read"){
             
-                ReadDialog* read = new ReadDialog();
-
                 read->setModal(true);
                 read->show();
+
+                //mCPU.push(read->GetReadValue());
 
                 break;
  

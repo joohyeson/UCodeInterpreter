@@ -2,11 +2,13 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_UCodeInterpreter.h"
+#include "ReadDialog.h"
 #include "Memory.h"
 #include <stack>
 #include "LabelInfo.h"
 #include "Instruction.h"
 #include <fstream>
+
 #define NO_OPCODE 40
 
 class UCodeInterpreter : public QMainWindow
@@ -34,9 +36,13 @@ private slots:
     void On_StepButton_Clicked();
     void On_RunButton_Clicked();
 
+public slots:
+    void GetReadData(QString str );
+
 private:
 
     Ui::UCodeInterpreterClass ui;
+    ReadDialog* read;
     Memory mMemory;
     std::stack<int> mCPU;
     std::stack<int> topstack;

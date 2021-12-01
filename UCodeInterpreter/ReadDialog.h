@@ -11,7 +11,16 @@ class ReadDialog : public QDialog
 public:
     ReadDialog(QWidget* parent = Q_NULLPTR);
 
+    int GetReadValue() {
+        return std::stoi(strValue);
+    }
+
+
+public slots:
+    void sendButtonClicked();
+
 private:
 
     Ui::Read ui;
+    std::string strValue = "";
 };
