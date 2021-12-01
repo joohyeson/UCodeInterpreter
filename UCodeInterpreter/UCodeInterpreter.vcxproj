@@ -93,11 +93,11 @@
   <ItemGroup>
     <QtRcc Include="UCodeInterpreter.qrc" />
     <QtUic Include="Read.ui" />
-    <QtUic Include="UCodeInterpreter.ui" />
     <QtMoc Include="UCodeInterpreter.h" />
     <ClCompile Include="ReadDialog.cpp" />
     <ClCompile Include="UCodeInterpreter.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="UCodeInterpreter.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Instruction.h" />
