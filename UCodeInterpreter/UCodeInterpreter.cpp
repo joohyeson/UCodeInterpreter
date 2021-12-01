@@ -292,7 +292,7 @@ void UCodeInterpreter::Execute(int now)
         int origin = topstack.top();
         topstack.pop();
 
-        PC = origin;
+        PC = origin-1;
         break;
     }
 
@@ -338,7 +338,10 @@ void UCodeInterpreter::Execute(int now)
                 int dialogCode=read->exec();
 
                 if (dialogCode == QDialog::Accepted) {
-                    mCPU.push(read->GetReadValue());
+                    int offset = mCPU.top();
+
+                    mMemory.SetMemoryValue(read->GetReadValue(), 2, offset);
+                    //mCPU.push(read->GetReadValue());
                 }
                 
 
@@ -372,6 +375,7 @@ void UCodeInterpreter::Execute(int now)
     {
         int location = std::stoi(Instructions[now].param1);
         PC = Labels[location].addr;
+        mCPU.pop();
         break;
     }
 
@@ -382,6 +386,7 @@ void UCodeInterpreter::Execute(int now)
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
         }
+        mCPU.pop();
         break;
     }
 
@@ -392,6 +397,7 @@ void UCodeInterpreter::Execute(int now)
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
         }
+        mCPU.pop();
         break;
     }
 
