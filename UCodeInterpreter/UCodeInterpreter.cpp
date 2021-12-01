@@ -273,8 +273,7 @@ void UCodeInterpreter::Execute(int now)
         int origin = topstack.top();
         topstack.pop();
 
-        mCPU.top() = origin;
-        PC = mCPU.top();
+        PC = origin;
         break;
     }
 
@@ -293,9 +292,7 @@ void UCodeInterpreter::Execute(int now)
 
         if (!(Instructions[pcTemp].param1 == "read") && !(Instructions[pcTemp].param1 == "write") && !(Instructions[pcTemp].param1 == "lt"))
         {
-            mCPU.push(pcTemp+1);
-            int origin = mCPU.top();
-            topstack.push(origin);
+            topstack.push(pcTemp+1);
         }//read, write, lf가 아닌 경우 push
 
         break;
