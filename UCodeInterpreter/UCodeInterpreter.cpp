@@ -75,10 +75,6 @@ void UCodeInterpreter::On_RunButton_Clicked()
     return;
 }
 
-void UCodeInterpreter::GetReadData(QString str)
-{
-    mCPU.push(std::stoi(str.toStdString()));
-}
 
 typedef enum opcode {
     nop, bgn, sym, lod, lda, ldc, str, ldi, sti,
@@ -326,9 +322,12 @@ void UCodeInterpreter::Execute(int now)
             if (Instructions[now].param1 == "read"){
             
                 read->setModal(true);
-                read->show();
+                int dialogCode=read->exec();
 
-                //mCPU.push(read->GetReadValue());
+                if (dialogCode == QDialog::Accepted) {
+                    mCPU.push(read->GetReadValue());
+                }
+                
 
                 break;
  

@@ -11,6 +11,8 @@ void ReadDialog::sendButtonClicked() {
     if (ui.lineEdit->text().toStdString() != "")
     {
         strValue = ui.lineEdit->text().toStdString();
+
+        accept();
         close();
     }
 }
