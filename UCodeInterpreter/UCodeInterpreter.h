@@ -37,7 +37,7 @@ private slots:
     void On_RunButton_Clicked();
 
 public slots:
-    void GetReadData(QString str );
+    void GetReadData(QString str);
 
 private:
 
