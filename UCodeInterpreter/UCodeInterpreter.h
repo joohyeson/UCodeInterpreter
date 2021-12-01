@@ -37,9 +37,6 @@ private slots:
     void On_StepButton_Clicked();
     void On_RunButton_Clicked();
 
-public slots:
-    void GetReadData(QString str);
-
 private:
 
     Ui::UCodeInterpreterClass ui;

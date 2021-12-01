@@ -87,10 +87,6 @@ void UCodeInterpreter::On_RunButton_Clicked()
     return;
 }
 
-void UCodeInterpreter::GetReadData(QString str)
-{
-    mCPU.push(std::stoi(str.toStdString()));
-}
 
 typedef enum opcode {
     nop, bgn, sym, lod, lda, ldc, str, ldi, sti,
@@ -296,7 +292,7 @@ void UCodeInterpreter::Execute(int now)
         int origin = topstack.top();
         topstack.pop();
 
-        PC = origin;
+        PC = origin-1;
         break;
     }
 
@@ -339,9 +335,15 @@ void UCodeInterpreter::Execute(int now)
             if (Instructions[now].param1 == "read"){
             
                 read->setModal(true);
-                read->show();
+                int dialogCode=read->exec();
 
-                //mCPU.push(read->GetReadValue());
+                if (dialogCode == QDialog::Accepted) {
+                    int offset = mCPU.top();
+
+                    mMemory.SetMemoryValue(read->GetReadValue(), 2, offset);
+                    //mCPU.push(read->GetReadValue());
+                }
+                
 
                 break;
  
@@ -373,6 +375,7 @@ void UCodeInterpreter::Execute(int now)
     {
         int location = std::stoi(Instructions[now].param1);
         PC = Labels[location].addr;
+        mCPU.pop();
         break;
     }
 
@@ -383,6 +386,7 @@ void UCodeInterpreter::Execute(int now)
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
         }
+        mCPU.pop();
         break;
     }
 
@@ -393,6 +397,7 @@ void UCodeInterpreter::Execute(int now)
             int location = std::stoi(Instructions[now].param1);
             PC = Labels[location].addr;
         }
+        mCPU.pop();
         break;
     }
 

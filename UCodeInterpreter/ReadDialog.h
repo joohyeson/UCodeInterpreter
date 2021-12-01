@@ -15,6 +15,9 @@ public:
         return std::stoi(strValue);
     }
 
+signals:
+    void sendData(QString text);
+
 
 public slots:
     void sendButtonClicked();

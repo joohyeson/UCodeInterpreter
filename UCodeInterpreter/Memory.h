@@ -7,7 +7,16 @@ public:
 
     int GetMemoryValue(int block, int offset)
     {
-        return MemoryStack[block-1][offset];
+
+        if (block == 1)
+        {
+            return MemoryStack[block - 1][offset];
+        }
+        else
+        {
+            return MemoryStack[1][BP + offset];
+        }
+       
     }
 
     int GetMemoryValue(int addr)
