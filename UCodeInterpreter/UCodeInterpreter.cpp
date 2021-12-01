@@ -45,6 +45,7 @@ void UCodeInterpreter::On_ReadUcoButton_Clicked()
 void UCodeInterpreter::On_CreateLstButton_Clicked()
 {
     CreateFile(QFileDialog::getSaveFileName(this, "Save File", QDir::currentPath(), "Files(*.lst)").toStdString());
+    Statistics();
 }
 
 void UCodeInterpreter::On_ExitButton_Clicked()
@@ -676,7 +677,11 @@ void UCodeInterpreter::Execute(int now)
 
 void UCodeInterpreter::Statistics()
 {
-    ui.textEdit->text("ddd");
+    ui.textBrowser->append(QString::fromLocal8Bit("==================== 실행 결과 ===================="));
+    ui.textBrowser->append(QString::fromLocal8Bit("1. 결과값"));
+    ui.textBrowser->append(QString::fromLocal8Bit("2. 명령어 실행 횟수"));
+    ui.textBrowser->append(QString::fromLocal8Bit("3. MemoryStack"));
+
 }
 
 //GUI MemoryStack 출력
