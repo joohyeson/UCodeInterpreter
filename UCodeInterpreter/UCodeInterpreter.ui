@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1103</width>
-    <height>796</height>
+    <width>1100</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,25 +61,15 @@
        </property>
       </column>
      </widget>
-     <widget class="QTableWidget" name="tableWidget_3">
+     <widget class="QTextBrowser" name="textBrowser">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
-        <width>551</width>
+        <y>1</y>
+        <width>561</width>
         <height>311</height>
        </rect>
       </property>
-      <column>
-       <property name="text">
-        <string>명령어</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>횟수</string>
-       </property>
-      </column>
      </widget>
     </widget>
    </widget>
@@ -302,8 +292,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1103</width>
-     <height>26</height>
+     <width>1100</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
