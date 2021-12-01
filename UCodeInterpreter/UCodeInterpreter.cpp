@@ -373,9 +373,15 @@ void UCodeInterpreter::Execute(int now)
     // Èå¸§ Á¦¾î
     case opcode::ujp:
     {
-        int location = std::stoi(Instructions[now].param1);
-        PC = Labels[location].addr;
-        mCPU.pop();
+        for (int labelcount = 0; labelcount < Labels.size(); labelcount++) {
+            if (Labels[labelcount].label == Instructions[now].param1) {
+                PC = Labels[labelcount].addr-1;
+                mCPU.pop();
+                break;
+            }
+            
+        }
+
         break;
     }
 
@@ -383,10 +389,15 @@ void UCodeInterpreter::Execute(int now)
     {
         if (mCPU.top() != 0)
         {
-            int location = std::stoi(Instructions[now].param1);
-            PC = Labels[location].addr;
+            for (int labelcount = 0; labelcount < Labels.size(); labelcount++) {
+                if (Labels[labelcount].label == Instructions[now].param1) {
+                    PC = Labels[labelcount].addr-1;
+                    mCPU.pop();
+                    break;
+                }
+
+            }
         }
-        mCPU.pop();
         break;
     }
 
@@ -394,10 +405,16 @@ void UCodeInterpreter::Execute(int now)
     {
         if (mCPU.top() == 0)
         {
-            int location = std::stoi(Instructions[now].param1);
-            PC = Labels[location].addr;
+            for (int labelcount = 0; labelcount < Labels.size(); labelcount++) {
+                if (Labels[labelcount].label == Instructions[now].param1) {
+                    PC = Labels[labelcount].addr-1;
+                    mCPU.pop();
+                    break;
+                }
+
+            }
         }
-        mCPU.pop();
+
         break;
     }
 

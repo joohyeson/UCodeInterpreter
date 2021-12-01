@@ -22,11 +22,11 @@ public:
     int GetMemoryValue(int addr)
     {
         if (addr > block0size) {
-            return MemoryStack[1][addr - block0size - 1];
+            return MemoryStack[1][addr];
         }
         else
         {
-            return MemoryStack[0][addr - 1];
+            return MemoryStack[0][addr];
         }
     }
 
@@ -57,11 +57,11 @@ public:
     void SetMemoryValue(int value, int addr)
     {
         if (addr > block0size) {
-            MemoryStack[1][addr - block0size-1]=value;
+            MemoryStack[1][addr]=value;
         }
         else
         {
-            MemoryStack[0][addr - 1]=value;
+            MemoryStack[0][addr]=value;
         }
     }
 
