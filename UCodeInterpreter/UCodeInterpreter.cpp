@@ -20,7 +20,7 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
     ui.tableWidget->setColumnWidth(3, 80);
     ui.tableWidget->setColumnWidth(4, 80);
 
-    ui.tableWidget_2->setColumnWidth(0, 230);
+    ui.tableWidget_2->setColumnWidth(0, 250);
     ui.tableWidget_2->setColumnWidth(1, 230);
 
     ui.CPUStackTable->setColumnWidth(0, 150);
@@ -654,7 +654,7 @@ void UCodeInterpreter::Execute(int now)
 
 void UCodeInterpreter::Statistics()
 {
-    
+
 }
 
 //GUI MemoryStack Ãâ·Â
