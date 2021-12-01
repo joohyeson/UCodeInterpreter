@@ -4,10 +4,13 @@
 #include <QDebug>
 #include <iostream>
 #include <cctype>
+#include "ReadDialog.h"
 
 UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
+
     ui.setupUi(this);
+    
 
     ui.tableWidget->setColumnWidth(0, 80);
     ui.tableWidget->setColumnWidth(1, 100);
@@ -312,11 +315,33 @@ void UCodeInterpreter::Execute(int now)
     {
         for (int i = 0; i < Labels.size(); i++)
         {
-            if (Instructions[now].param1 == Labels[i].label)
+
+            if (Instructions[now].param1 == "read"){
+            
+                ReadDialog* read = new ReadDialog();
+
+                read->setModal(true);
+                read->show();
+
+                break;
+ 
+
+            }
+            else if (Instructions[now].param1 == "write") {
+
+            }
+            else if (Instructions[now].param1 == "lf") {
+
+            }
+            else if (Instructions[now].param1 == Labels[i].label)
             {
                 PC = Labels[i].addr - 2;
+                break;
             }
+            
         }
+
+
         break;
     }
 

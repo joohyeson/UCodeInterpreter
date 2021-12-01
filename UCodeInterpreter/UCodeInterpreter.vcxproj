@@ -92,8 +92,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="UCodeInterpreter.qrc" />
+    <QtUic Include="Read.ui" />
     <QtUic Include="UCodeInterpreter.ui" />
     <QtMoc Include="UCodeInterpreter.h" />
+    <ClCompile Include="ReadDialog.cpp" />
     <ClCompile Include="UCodeInterpreter.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -102,6 +104,7 @@
     <ClInclude Include="LabelInfo.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MemoryInfo.h" />
+    <QtMoc Include="ReadDialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
