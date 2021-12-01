@@ -6,6 +6,7 @@
 #include <cctype>
 #include "ReadDialog.h"
 
+
 UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
 {
 
