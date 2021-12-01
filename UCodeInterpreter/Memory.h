@@ -12,14 +12,24 @@ public:
 
     int GetMemoryValue(int addr)
     {
-        int* ptr = reinterpret_cast<int*>(addr);
-        return *ptr;
+        if (addr > block0size) {
+            return MemoryStack[1][addr - block0size - 1];
+        }
+        else
+        {
+            return MemoryStack[0][addr - 1];
+        }
     }
 
     int GetMemoryAddress(int block, int offset)
     {
-        auto it = MemoryStack[block-1].begin();
-        return reinterpret_cast<int>(&(it + offset));
+        if (block == 1) {
+            return offset;
+        }
+        else
+        {
+            return BP + offset+block0size;
+        }
     }
 
     void SetMemoryValue(int value, int block, int offset)
@@ -37,18 +47,28 @@ public:
 
     void SetMemoryValue(int value, int addr)
     {
-        int* ptr = reinterpret_cast<int*>(addr);
-        *ptr = value;
+        if (addr > block0size) {
+            MemoryStack[1][addr - block0size-1]=value;
+        }
+        else
+        {
+            MemoryStack[0][addr - 1]=value;
+        }
     }
 
     void SetMemoryValue(int value) // È®½Çx
     {
-        MemoryStack->push_back(value);
+        MemoryStack[1].push_back(value);
     }
 
     void AddMemory(int value, std::string op) {
         if (op == "proc") {
-            MemoryStack[1].resize(MemoryStack[1].size() + value, -1);
+
+            int sum = 0;
+            for (int i = 0; i < BlockSize.size(); i++) {
+                sum += BlockSize[i];
+            }
+            MemoryStack[1].resize(sum + value, -1);
 
 
             if (BP == -1) {
@@ -65,6 +85,7 @@ public:
         else
         {
             MemoryStack[0].resize(value, -1);
+            block0size = value;
         }
     }
 
@@ -90,4 +111,5 @@ private:
 
     std::vector<int> MemoryStack[2];
     std::vector<int> BlockSize;
+    int block0size = 0;
 };

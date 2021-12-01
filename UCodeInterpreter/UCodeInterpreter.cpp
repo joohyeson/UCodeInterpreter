@@ -281,27 +281,30 @@ void UCodeInterpreter::Execute(int now)
     case opcode::ldp:
     {
         pcTemp = PC;
+
         while (1)
         {
-            PC++;
-            if (!(Instructions[now].inst == "call"))
+            pcTemp++;
+            if ((Instructions[pcTemp].inst == "call"))
             {
                 break;
             }
-        }
-        if (!(Instructions[now].param1 == "read") || !(Instructions[now].param1 == "write") || !(Instructions[now].param1 == "lt"))
+        }//PC가 아닌 pcTemp를 증가시켜서 값을 찾아봄 (PC를 증가시키면 jump랑 같은 기능)
+
+        if (!(Instructions[pcTemp].param1 == "read") && !(Instructions[pcTemp].param1 == "write") && !(Instructions[pcTemp].param1 == "lt"))
         {
-            mCPU.push(PC);
+            mCPU.push(pcTemp+1);
             int origin = mCPU.top();
             topstack.push(origin);
-        }
-        //PC = pcTemp;
+        }//read, write, lf가 아닌 경우 push
+
         break;
     }
 
     case opcode::push:
     {
         int origin = mCPU.top();
+        mCPU.pop();
 
         mMemory.SetMemoryValue(origin);
 

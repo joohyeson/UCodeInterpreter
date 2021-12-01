@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1103</width>
-    <height>789</height>
+    <width>1105</width>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -185,7 +185,7 @@ p, li { white-space: pre-wrap; }
       </column>
       <column>
        <property name="text">
-        <string>Offset</string>
+        <string>Addr</string>
        </property>
       </column>
       <column>
@@ -304,7 +304,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1103</width>
+     <width>1105</width>
      <height>22</height>
     </rect>
    </property>
