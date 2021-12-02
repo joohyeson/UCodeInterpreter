@@ -20,8 +20,8 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
     ui.tableWidget->setColumnWidth(3, 80);
     ui.tableWidget->setColumnWidth(4, 80);
 
-    ui.tableWidget_2->setColumnWidth(0, 230);
-    ui.tableWidget_2->setColumnWidth(1, 230);
+    ui.tableWidget_2->setColumnWidth(0, 120);
+    ui.tableWidget_2->setColumnWidth(1, 120);
 
     ui.CPUStackTable->setColumnWidth(0, 150);
 
