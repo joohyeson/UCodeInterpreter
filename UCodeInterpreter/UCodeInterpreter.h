@@ -7,6 +7,7 @@
 #include <stack>
 #include "LabelInfo.h"
 #include "Instruction.h"
+#include "Result.h"
 #include <fstream>
 #include <Qmessagebox>
 
@@ -44,12 +45,13 @@ private:
     Memory mMemory;
     std::stack<int> mCPU;
     std::stack<int> topstack;
-    std::vector<std::string> Result;
+    std::vector<Result> Results;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
     bool hasInstructions = true;
 
     QMessageBox msgbox;
     int filecheck = 0;
+    int instCnt[40];
     int PC = 0;
 };

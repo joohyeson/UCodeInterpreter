@@ -106,11 +106,6 @@ public:
         BlockSize.pop_back();
     }
 
-    void ReadyMemory()
-    {
-    
-    }
-
     std::vector<int>* GetMemoryStack() {
         return MemoryStack;
     }
