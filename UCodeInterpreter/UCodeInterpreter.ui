@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1100</width>
-    <height>800</height>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,32 +35,6 @@
        <height>309</height>
       </rect>
      </property>
-     <widget class="QTableWidget" name="tableWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>570</x>
-        <y>0</y>
-        <width>511</width>
-        <height>311</height>
-       </rect>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
-      </property>
-      <attribute name="horizontalHeaderCascadingSectionResizes">
-       <bool>true</bool>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>Label</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>addr</string>
-       </property>
-      </column>
-     </widget>
      <widget class="QTextBrowser" name="textBrowser">
       <property name="geometry">
        <rect>
@@ -70,6 +44,31 @@
         <height>311</height>
        </rect>
       </property>
+     </widget>
+     <widget class="QTableWidget" name="MemoryTable">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>0</y>
+        <width>511</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Addr</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Block</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Value</string>
+       </property>
+      </column>
      </widget>
     </widget>
    </widget>
@@ -157,28 +156,29 @@
        <height>389</height>
       </rect>
      </property>
-     <widget class="QTableWidget" name="MemoryTable">
+     <widget class="QTableWidget" name="tableWidget_2">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>1</y>
+        <y>0</y>
         <width>261</width>
         <height>391</height>
        </rect>
       </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
       <column>
        <property name="text">
-        <string>Block</string>
+        <string>Label</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Addr</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Value</string>
+        <string>addr</string>
        </property>
       </column>
      </widget>
