@@ -13,7 +13,6 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
     ui.setupUi(this);
     read = new ReadDialog();
 
-
     ui.tableWidget->setColumnWidth(0, 80);
     ui.tableWidget->setColumnWidth(1, 100);
     ui.tableWidget->setColumnWidth(2, 80);
@@ -34,6 +33,7 @@ UCodeInterpreter::UCodeInterpreter(QWidget* parent) : QMainWindow(parent)
     connect(ui.pushButton_4, &QPushButton::clicked, this, &UCodeInterpreter::On_RunButton_Clicked);
     connect(ui.pushButton_5, &QPushButton::clicked, this, &UCodeInterpreter::On_CreateLstButton_Clicked);
     connect(ui.pushButton_6, &QPushButton::clicked, this, &UCodeInterpreter::On_ExitButton_Clicked);
+    connect(ui.pushButton, &QPushButton::clicked, this, &UCodeInterpreter::On_JumpButton_Clicked);
 }
 
 void UCodeInterpreter::On_ReadUcoButton_Clicked()
@@ -53,6 +53,42 @@ void UCodeInterpreter::On_ExitButton_Clicked()
     this->close();
 }
 
+void UCodeInterpreter::On_JumpButton_Clicked()
+{
+    if (filecheck == 0)
+    {
+        msgbox.setText("First read .*uco file");
+        msgbox.exec();
+    }
+
+    if (hasInstructions == true)
+    {
+        while (Instructions[PC].label=="") {
+            Execute(PC);
+            PC++;
+           
+        }
+
+        ui.tableWidget->selectRow(PC);
+
+        UCodeInterpreter::PrintCPUStack();
+        UCodeInterpreter::PrintMemory();
+    }
+    else
+    {
+        ui.tableWidget->selectRow(PC - 1);
+        msgbox.setText(QString::fromLocal8Bit("실행결과: \n"));
+
+        for (int resultValue = 0; resultValue < result.size(); resultValue++)
+        {
+            msgbox.setText(msgbox.text() + QString::fromStdString(result[resultValue]));
+        }
+
+        msgbox.exec();
+        return;
+    }
+}
+
 void UCodeInterpreter::On_StepButton_Clicked()
 {
     if (filecheck == 0)
@@ -64,7 +100,13 @@ void UCodeInterpreter::On_StepButton_Clicked()
     if (hasInstructions == true)
     {
         Execute(PC);
+        ui.tableWidget->selectRow(PC);
+
         PC++;
+
+
+        UCodeInterpreter::PrintCPUStack();
+        UCodeInterpreter::PrintMemory();
     }
     else
     {
@@ -93,6 +135,10 @@ void UCodeInterpreter::On_RunButton_Clicked()
         Execute(PC);
         PC++;
     }
+    ui.tableWidget->selectRow(PC-1);
+
+    UCodeInterpreter::PrintCPUStack();
+    UCodeInterpreter::PrintMemory();
 
     if (hasInstructions == false)
     {
@@ -717,8 +763,6 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-    UCodeInterpreter::PrintCPUStack();
-    UCodeInterpreter::PrintMemory();
 
 }
 
@@ -758,8 +802,6 @@ void UCodeInterpreter::PrintMemory() {
 
 //GUI CPUStack 출력
 void UCodeInterpreter::PrintCPUStack() {
-
-    ui.tableWidget->selectRow(PC);
 
     std::stack<int> tmp = mCPU;
     std::vector<int> vec;
