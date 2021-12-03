@@ -213,8 +213,10 @@ void UCodeInterpreter::ReadFile(std::string path)
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
-                if (inst == "bgn") PC = lineCount;
-
+                if (inst == "bgn") {
+                    PC = lineCount;
+                    instCnt[1]++;
+                }
                 Instructions.push_back(instruction);
 
             }
@@ -244,7 +246,10 @@ void UCodeInterpreter::ReadFile(std::string path)
                     }
                 }
 
-                if (inst == "bgn") PC = lineCount;
+                if (inst == "bgn") {
+                    PC = lineCount;
+                    instCnt[1]++;
+                }
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
 
@@ -337,12 +342,21 @@ void UCodeInterpreter::Execute(int now)
 
     if (Instructions[now].inst == "end") {
         hasInstructions = false;
+        instCnt[36]++;
         return;
     }
 
     switch (inst)//switch문에서는 str못 넣어서 enum값 사용
     {
 
+    case opcode::nop: {
+        instCnt[0]++;
+        break;
+    }
+    case opcode::sym: {
+        instCnt[2]++;
+        break;
+    }
     case opcode::bgn:
     {
 
@@ -355,7 +369,7 @@ void UCodeInterpreter::Execute(int now)
         int variableSize = std::stoi(Instructions[now].param1);
 
         mMemory.AddMemory(variableSize, std::string("proc"));
-
+        instCnt[35]++;
         break;
     }
 
@@ -367,6 +381,7 @@ void UCodeInterpreter::Execute(int now)
         PC = returnAddr;
 
         mMemory.RemoveMemory();
+        instCnt[32]++;
         break;
     }
 
@@ -387,7 +402,7 @@ void UCodeInterpreter::Execute(int now)
         }//PC가 아닌 pcTemp를 증가시켜서 값을 찾아봄 (PC를 증가시키면 jump랑 같은 기능)
 
         mMemory.SetMemoryValue(pcTemp, mMemory.GetSP());
-
+        instCnt[34];
         break;
     }
 
@@ -397,12 +412,13 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mMemory.SetMemoryValue(origin);
-
+        instCnt[33] ++;
         break;
     }
 
     case opcode::call:
     {
+        instCnt[31] ++;
         for (int i = 0; i < Labels.size(); i++)
         {
 
@@ -421,7 +437,7 @@ void UCodeInterpreter::Execute(int now)
                     mMemory.ResizeMemory(mMemory.GetSP() + 1);
                     //mCPU.push(read->GetReadValue());
                 }
-
+                instCnt[37] ++;
                 break;
 
 
@@ -436,7 +452,7 @@ void UCodeInterpreter::Execute(int now)
 
                 mMemory.SetSP(mMemory.GetSP() - 2);
                 mMemory.ResizeMemory(mMemory.GetSP() + 1);
-
+                instCnt[38] ++;
                 break;
             }
             else if (Instructions[now].param1 == "lf") {
@@ -444,6 +460,7 @@ void UCodeInterpreter::Execute(int now)
 
                 mMemory.SetSP(mMemory.GetSP() - 2);
                 mMemory.ResizeMemory(mMemory.GetSP() + 1);
+                instCnt[39] ++;
                 break;
             }
             else if (Instructions[now].param1 == Labels[i].label)
@@ -467,7 +484,7 @@ void UCodeInterpreter::Execute(int now)
             }
 
         }
-
+        instCnt[28] ++;
         break;
     }
 
@@ -488,6 +505,8 @@ void UCodeInterpreter::Execute(int now)
         {
             mCPU.pop();
         }
+
+        instCnt[29] ++;
         break;
     }
 
@@ -508,7 +527,7 @@ void UCodeInterpreter::Execute(int now)
         {
             mCPU.pop();
         }
-
+        instCnt[30] ++;
         break;
     }
 
@@ -519,6 +538,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(!origin);
+        instCnt[9] ++;
         break;
     }
 
@@ -528,6 +548,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(-1 * origin);
+        instCnt[10] ++;
         break;
     }
 
@@ -537,6 +558,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(++origin);
+        instCnt[11] ++;
         break;
     }
 
@@ -546,6 +568,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(--origin);
+        instCnt[12] ++;
         break;
     }
 
@@ -554,6 +577,7 @@ void UCodeInterpreter::Execute(int now)
         int origin = mCPU.top();
 
         mCPU.push(origin);
+        instCnt[13] ++;
         break;
     }
 
@@ -566,6 +590,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp + origin);
+        instCnt[14] ++;
         break;
     }
 
@@ -577,6 +602,8 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp - origin);
+        
+        instCnt[15] ++;
         break;
     }
 
@@ -588,6 +615,8 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp * origin);
+        
+        instCnt[16] ++;
         break;
     }
 
@@ -599,6 +628,8 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp / origin);
+        
+        instCnt[17] ++;
         break;
     }
 
@@ -610,6 +641,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp % origin);
+        instCnt[18] ++;
         break;
     }
 
@@ -621,6 +653,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp > origin);
+        instCnt[19] ++;
         break;
     }
 
@@ -632,6 +665,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp < origin);
+        instCnt[20] ++;
         break;
     }
 
@@ -643,6 +677,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp >= origin);
+        instCnt[21] ++;
         break;
     }
 
@@ -654,6 +689,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp <= origin);
+        instCnt[22] ++;
         break;
     }
 
@@ -665,6 +701,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp == origin);
+        instCnt[23] ++;
         break;
     }
 
@@ -677,6 +714,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp != origin);
+        instCnt[24] ++;
         break;
     }
 
@@ -688,6 +726,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp && origin);
+        instCnt[25] ++;
         break;
     }
 
@@ -699,6 +738,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp || origin);
+        instCnt[26] ++;
         break;
     }
 
@@ -711,6 +751,7 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(origin);
         mCPU.push(cmp);
+        instCnt[27] ++;
         break;
     }
 
@@ -718,6 +759,7 @@ void UCodeInterpreter::Execute(int now)
 
         int value = mMemory.GetMemoryValue(std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         mCPU.push(value);
+        instCnt[3] ++;
         break;
 
     }
@@ -725,11 +767,12 @@ void UCodeInterpreter::Execute(int now)
     case opcode::lda: {//확실 x
         int value = mMemory.GetMemoryAddress(std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         mCPU.push(value);
+        instCnt[4] ++;
         break;
     }
     case opcode::ldc: {
         mCPU.push(std::stoi(Instructions[now].param1));
-
+        instCnt[5] ++;
         break;
     }
 
@@ -762,8 +805,6 @@ void UCodeInterpreter::Execute(int now)
     default:
         break;
     }
-
-
 }
 
 void UCodeInterpreter::Statistics()
