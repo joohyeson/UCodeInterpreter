@@ -100,10 +100,6 @@ public:
     void ResizeMemory(int value) {
         MemoryStack.resize(value);
     }
-    void ReadyMemory()
-    {
-
-    }
 
     std::vector<int> GetMemoryStack() {
         return MemoryStack;

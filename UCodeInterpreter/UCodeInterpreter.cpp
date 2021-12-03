@@ -401,7 +401,7 @@ void UCodeInterpreter::Execute(int now)
         }//PC가 아닌 pcTemp를 증가시켜서 값을 찾아봄 (PC를 증가시키면 jump랑 같은 기능)
 
         mMemory.SetMemoryValue(pcTemp, mMemory.GetSP());
-        instCnt[34];
+        instCnt[34]++;
         break;
     }
 
@@ -807,12 +807,15 @@ void UCodeInterpreter::Statistics()
     ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 결과값 >>>>>>"));
     for (int i = 0; i < result.size(); i++)
     {
-        ui.textBrowser->append(QString::fromStdString(result[i]));
+        //ui.textBrowser->append(QString::fromStdString(result[i]));
+        ui.textBrowser->append(QString::fromStdString("save"));
+
     }
+
     ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 명령어 실행 횟수 >>>>>>"));
-    for (int i = 0; i < Instructions.size(); i++)
+    for (int i = 0; i < NO_OPCODE; i++)
     {
-        ui.textBrowser->append(QString::fromStdString(Instructions[i].inst) + ": " + QString::number(instCnt[i]));
+        ui.textBrowser->append(QString::fromStdString(opcodeName[i]) + ": " + QString::number(instCnt[i]));
     }
 
     std::vector<int> tmpMemory = mMemory.GetMemoryStack();
