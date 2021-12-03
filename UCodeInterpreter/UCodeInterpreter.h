@@ -53,5 +53,7 @@ private:
     QMessageBox msgbox;
     int filecheck = 0;
     int instCnt[40] = {0};
+    int InstTotalCnt = 0;
+    int memoryCnt = 0;
     int PC = 0;
 };

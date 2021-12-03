@@ -216,6 +216,7 @@ void UCodeInterpreter::ReadFile(std::string path)
                 if (inst == "bgn") {
                     PC = lineCount;
                     instCnt[1]++;
+                    InstTotalCnt++;
                 }
                 Instructions.push_back(instruction);
 
@@ -249,6 +250,7 @@ void UCodeInterpreter::ReadFile(std::string path)
                 if (inst == "bgn") {
                     PC = lineCount;
                     instCnt[1]++;
+                    InstTotalCnt++;
                 }
 
                 Instruction instruction = Instruction(label, inst, param[0], param[1], param[2]);
@@ -343,6 +345,7 @@ void UCodeInterpreter::Execute(int now)
     if (Instructions[now].inst == "end") {
         hasInstructions = false;
         instCnt[36]++;
+        InstTotalCnt++;
         return;
     }
 
@@ -351,10 +354,12 @@ void UCodeInterpreter::Execute(int now)
 
     case opcode::nop: {
         instCnt[0]++;
+        InstTotalCnt++;
         break;
     }
     case opcode::sym: {
         instCnt[2]++;
+        InstTotalCnt++;
         break;
     }
     case opcode::bgn:
@@ -369,6 +374,7 @@ void UCodeInterpreter::Execute(int now)
 
         mMemory.AddMemory(variableSize, std::string("proc"));
         instCnt[35]++;
+        InstTotalCnt++;
         break;
     }
 
@@ -381,6 +387,7 @@ void UCodeInterpreter::Execute(int now)
 
         mMemory.RemoveMemory();
         instCnt[32]++;
+        InstTotalCnt++;
         break;
     }
 
@@ -402,6 +409,7 @@ void UCodeInterpreter::Execute(int now)
 
         mMemory.SetMemoryValue(pcTemp, mMemory.GetSP());
         instCnt[34]++;
+        InstTotalCnt++;
         break;
     }
 
@@ -412,12 +420,16 @@ void UCodeInterpreter::Execute(int now)
 
         mMemory.SetMemoryValue(origin);
         instCnt[33] ++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
     }
 
     case opcode::call:
     {
         instCnt[31] ++;
+        InstTotalCnt++;
+
         for (int i = 0; i < Labels.size(); i++)
         {
 
@@ -437,6 +449,7 @@ void UCodeInterpreter::Execute(int now)
                     //mCPU.push(read->GetReadValue());
                 }
                 instCnt[37] ++;
+                InstTotalCnt++;
                 break;
             }
             else if (Instructions[now].param1 == "write") {
@@ -449,6 +462,7 @@ void UCodeInterpreter::Execute(int now)
                 mMemory.SetSP(mMemory.GetSP() - 2);
                 mMemory.ResizeMemory(mMemory.GetSP() + 1);
                 instCnt[38] ++;
+                InstTotalCnt++;
                 break;
             }
             else if (Instructions[now].param1 == "lf") {
@@ -457,6 +471,7 @@ void UCodeInterpreter::Execute(int now)
                 mMemory.SetSP(mMemory.GetSP() - 2);
                 mMemory.ResizeMemory(mMemory.GetSP() + 1);
                 instCnt[39] ++;
+                InstTotalCnt++;
                 break;
             }
             else if (Instructions[now].param1 == Labels[i].label)
@@ -478,6 +493,7 @@ void UCodeInterpreter::Execute(int now)
             }
         }
         instCnt[28] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -499,6 +515,7 @@ void UCodeInterpreter::Execute(int now)
         }
 
         instCnt[29] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -519,6 +536,7 @@ void UCodeInterpreter::Execute(int now)
             mCPU.pop();
         }
         instCnt[30] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -530,6 +548,7 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(!origin);
         instCnt[9] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -540,6 +559,7 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(-1 * origin);
         instCnt[10] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -550,6 +570,7 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(++origin);
         instCnt[11] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -560,6 +581,7 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(--origin);
         instCnt[12] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -569,6 +591,7 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(origin);
         instCnt[13] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -581,7 +604,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp + origin);
+
         instCnt[14] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -595,6 +620,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.push(cmp - origin);
         
         instCnt[15] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -608,6 +634,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.push(cmp * origin);
         
         instCnt[16] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -621,6 +648,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.push(cmp / origin);
         
         instCnt[17] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -632,7 +660,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp % origin);
+
         instCnt[18] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -644,7 +674,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp > origin);
+
         instCnt[19] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -656,7 +688,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp < origin);
+
         instCnt[20] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -668,7 +702,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp >= origin);
+
         instCnt[21] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -680,7 +716,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp <= origin);
+
         instCnt[22] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -692,7 +730,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp == origin);
+
         instCnt[23] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -705,7 +745,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp != origin);
+
         instCnt[24] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -717,7 +759,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp && origin);
+
         instCnt[25] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -729,7 +773,9 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(cmp || origin);
+
         instCnt[26] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -742,7 +788,9 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(origin);
         mCPU.push(cmp);
+
         instCnt[27] ++;
+        InstTotalCnt++;
         break;
     }
 
@@ -751,19 +799,24 @@ void UCodeInterpreter::Execute(int now)
         int value = mMemory.GetMemoryValue(std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         mCPU.push(value);
         instCnt[3] ++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
-
     }
 
     case opcode::lda: {//확실 x
         int value = mMemory.GetMemoryAddress(std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         mCPU.push(value);
         instCnt[4] ++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
     }
     case opcode::ldc: {
         mCPU.push(std::stoi(Instructions[now].param1));
         instCnt[5] ++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
     }
 
@@ -773,6 +826,8 @@ void UCodeInterpreter::Execute(int now)
 
         mMemory.SetMemoryValue(origin, std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
         instCnt[6]++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
     }
     case opcode::ldi: {
@@ -781,6 +836,8 @@ void UCodeInterpreter::Execute(int now)
 
         mCPU.push(mMemory.GetMemoryValue(origin));
         instCnt[7]++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
     }
 
@@ -793,6 +850,8 @@ void UCodeInterpreter::Execute(int now)
 
         mMemory.SetMemoryValue(value, addr);
         instCnt[8]++;
+        InstTotalCnt++;
+        memoryCnt++;
         break;
     }
 
@@ -807,23 +866,19 @@ void UCodeInterpreter::Statistics()
     ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 결과값 >>>>>>"));
     for (int i = 0; i < result.size(); i++)
     {
-        //ui.textBrowser->append(QString::fromStdString(result[i]));
-        ui.textBrowser->append(QString::fromStdString("save"));
-
+        ui.textBrowser->append(QString::fromStdString(result[i]));
     }
 
-    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 명령어 실행 횟수 >>>>>>"));
+    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< MemoryStack 접근 횟수 >>>>>>"));
+    ui.textBrowser->append(QString::number(memoryCnt));
+
+    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 명령어 총 실행 횟수 >>>>>>"));
+    ui.textBrowser->append(QString::number(InstTotalCnt));
+
+    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 각 명령어별 실행 횟수 >>>>>>"));
     for (int i = 0; i < NO_OPCODE; i++)
     {
         ui.textBrowser->append(QString::fromStdString(opcodeName[i]) + ": " + QString::number(instCnt[i]));
-    }
-
-    std::vector<int> tmpMemory = mMemory.GetMemoryStack();
-
-    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< MemoryStack >>>>>>"));
-    for (int i = 0; i < tmpMemory.size(); i++)
-    {
-        ui.textBrowser->append(QString::number(i+1) + QString::fromLocal8Bit("번지 : ") + QString::number(tmpMemory[i]));
     }
 }
 
