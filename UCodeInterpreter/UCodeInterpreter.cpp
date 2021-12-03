@@ -267,8 +267,8 @@ void UCodeInterpreter::ReadFile(std::string path)
         filecheck++;
     }
 
+    is.close();
     //ui.textEdit->setText(QString::number(Labels[1].addr));
-
 }
 
 int UCodeInterpreter::GetParamCount(std::string ins)
@@ -929,4 +929,44 @@ void UCodeInterpreter::CreateFile(std::string path)
 {
     std::ofstream os(path, std::ofstream::out, std::ofstream::binary);
 
+    std::vector<char*> title = { "==================== 실행 결과 ====================", "<<<<<< 결과값 >>>>>>",
+        "<<<<<< MemoryStack 접근 횟수 >>>>>>", "<<<<<< 명령어 총 실행 횟수 >>>>>>", "<<<<<< 각 명령어별 실행 횟수 >>>>>>" };
+
+    if (os.is_open())
+    {
+        os.write(title[0], 51);
+        os.write("\n", 1);
+
+        os.write(title[1], 20);
+        os.write("\n", 1);
+
+        for (int i = 0; i < result.size(); i++)
+        {
+            std::string tmp = result[i];
+
+            os.write(tmp.c_str(), tmp.size());
+        }
+
+        os.write(title[2], 35);
+        os.write("\n", 1);
+        os.write(std::to_string(memoryCnt).c_str(), std::to_string(memoryCnt).size());
+        os.write("\n", 1);
+
+        os.write(title[3], 33);
+        os.write("\n", 1);
+        os.write(std::to_string(InstTotalCnt).c_str(), std::to_string(InstTotalCnt).size());
+        os.write("\n", 1);
+
+        os.write(title[4], 35);
+        os.write("\n", 1);
+
+        for (int i = 0; i < NO_OPCODE; i++)
+        {
+            os.write(opcodeName[i].c_str(), 10);
+            os.write(": ", 2);
+            os.write(std::to_string(instCnt[i]).c_str(), std::to_string(instCnt[i]).size());
+            os.write("\n", 1);
+        }
+    }
+    os.close();
 }
