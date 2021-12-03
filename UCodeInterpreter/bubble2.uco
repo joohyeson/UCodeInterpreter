@@ -77,7 +77,7 @@ bubble     proc 4
 $$4        nop        % begin of while
            lod 2 2
            ldc 1
-           gt
+           ge
            fjp $$5
            ldc 0          % begin of for
            str 2 1
@@ -95,6 +95,7 @@ $$6        nop
            add
            lda 1 0
            add            % list[i+1]
+           ldi
            gt
            fjp $$8 
            lod 2 1
