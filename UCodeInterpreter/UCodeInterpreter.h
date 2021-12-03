@@ -46,6 +46,7 @@ private:
     std::stack<int> mCPU;
     std::stack<int> topstack;
     std::vector<Result> Results;
+    std::vector<std::string> result;
     std::vector<LabelInfo> Labels;
     std::vector<Instruction> Instructions;
     bool hasInstructions = true;
