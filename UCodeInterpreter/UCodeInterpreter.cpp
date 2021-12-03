@@ -359,7 +359,6 @@ void UCodeInterpreter::Execute(int now)
     }
     case opcode::bgn:
     {
-
         mMemory.AddMemory(std::stoi(Instructions[now].param1), "bgn");
         break;
     }
@@ -439,8 +438,6 @@ void UCodeInterpreter::Execute(int now)
                 }
                 instCnt[37] ++;
                 break;
-
-
             }
             else if (Instructions[now].param1 == "write") {
                 int addr = mMemory.GetSP() + 1;
@@ -448,7 +445,6 @@ void UCodeInterpreter::Execute(int now)
 
                 result.push_back(std::to_string(value));
                 result.push_back("\t");
-
 
                 mMemory.SetSP(mMemory.GetSP() - 2);
                 mMemory.ResizeMemory(mMemory.GetSP() + 1);
@@ -468,9 +464,7 @@ void UCodeInterpreter::Execute(int now)
                 PC = Labels[i].addr - 2;
                 break;
             }
-
         }
-
         break;
     }
 
@@ -482,7 +476,6 @@ void UCodeInterpreter::Execute(int now)
                 PC = Labels[labelcount].addr - 1;
                 break;
             }
-
         }
         instCnt[28] ++;
         break;
@@ -498,7 +491,6 @@ void UCodeInterpreter::Execute(int now)
                     mCPU.pop();
                     break;
                 }
-
             }
         }
         else
@@ -520,7 +512,6 @@ void UCodeInterpreter::Execute(int now)
                     mCPU.pop();
                     break;
                 }
-
             }
         }
         else
@@ -781,6 +772,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mMemory.SetMemoryValue(origin, std::stoi(Instructions[now].param1), std::stoi(Instructions[now].param2));
+        instCnt[6]++;
         break;
     }
     case opcode::ldi: {
@@ -788,6 +780,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mCPU.push(mMemory.GetMemoryValue(origin));
+        instCnt[7]++;
         break;
     }
 
@@ -799,6 +792,7 @@ void UCodeInterpreter::Execute(int now)
         mCPU.pop();
 
         mMemory.SetMemoryValue(value, addr);
+        instCnt[8]++;
         break;
     }
 
@@ -810,10 +804,24 @@ void UCodeInterpreter::Execute(int now)
 void UCodeInterpreter::Statistics()
 {
     ui.textBrowser->append(QString::fromLocal8Bit("==================== 실행 결과 ===================="));
-    ui.textBrowser->append(QString::fromLocal8Bit("1. 결과값"));
-    ui.textBrowser->append(QString::fromLocal8Bit("2. 명령어 실행 횟수"));
-    ui.textBrowser->append(QString::fromLocal8Bit("3. MemoryStack"));
+    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 결과값 >>>>>>"));
+    for (int i = 0; i < result.size(); i++)
+    {
+        ui.textBrowser->append(QString::fromStdString(result[i]));
+    }
+    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< 명령어 실행 횟수 >>>>>>"));
+    for (int i = 0; i < Instructions.size(); i++)
+    {
+        ui.textBrowser->append(QString::fromStdString(Instructions[i].inst) + ": " + QString::number(instCnt[i]));
+    }
 
+    std::vector<int> tmpMemory = mMemory.GetMemoryStack();
+
+    ui.textBrowser->append(QString::fromLocal8Bit("<<<<<< MemoryStack >>>>>>"));
+    for (int i = 0; i < tmpMemory.size(); i++)
+    {
+        ui.textBrowser->append(QString::number(i+1) + QString::fromLocal8Bit("번지 : ") + QString::number(tmpMemory[i]));
+    }
 }
 
 //GUI MemoryStack 출력
