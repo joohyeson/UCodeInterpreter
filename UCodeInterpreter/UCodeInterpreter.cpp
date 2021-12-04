@@ -59,6 +59,8 @@ void UCodeInterpreter::On_JumpButton_Clicked()
     {
         msgbox.setText("First read .*uco file");
         msgbox.exec();
+
+        return;
     }
 
     if (hasInstructions == true)
@@ -95,6 +97,8 @@ void UCodeInterpreter::On_StepButton_Clicked()
     {
         msgbox.setText("First read .*uco file");
         msgbox.exec();
+
+        return;
     }
 
     if (hasInstructions == true)
@@ -129,6 +133,8 @@ void UCodeInterpreter::On_RunButton_Clicked()
     {
         msgbox.setText("First read .*uco file");
         msgbox.exec();
+
+        return;
     }
 
     while (hasInstructions == true) {
