@@ -65,13 +65,20 @@ void UCodeInterpreter::On_JumpButton_Clicked()
 
     if (hasInstructions == true)
     {
-        while (Instructions[PC].label=="") {
+
+        if (Instructions[PC].label != "")
+        {
+            Execute(PC);
+            PC++;
+        }
+
+        while (Instructions[PC].label==""|| Instructions[PC].label[0] == '$' ){
             Execute(PC);
             PC++;
            
         }
 
-        ui.tableWidget->selectRow(PC);
+        ui.tableWidget->selectRow(PC-1);
 
         UCodeInterpreter::PrintCPUStack();
         UCodeInterpreter::PrintMemory();
