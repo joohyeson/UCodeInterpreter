@@ -71,21 +71,30 @@ void UCodeInterpreter::On_JumpButton_Clicked()
             Execute(PC);
             PC++;
         }
+        else
+        {
+            while (Instructions[PC].label == "" || Instructions[PC].label[0] == '$') {
 
-        while (Instructions[PC].label==""|| Instructions[PC].label[0] == '$' ){
+                Execute(PC);
+
+                if (hasInstructions == false) return;
+                PC++;
+            }
+
             Execute(PC);
             PC++;
-           
         }
 
-        ui.tableWidget->selectRow(PC-1);
+            
+         ui.tableWidget->selectRow(PC-1);
+        
 
         UCodeInterpreter::PrintCPUStack();
         UCodeInterpreter::PrintMemory();
     }
     else
     {
-        ui.tableWidget->selectRow(PC - 1);
+        ui.tableWidget->selectRow(PC);
         msgbox.setText(QString::fromLocal8Bit("실행결과: \n"));
 
         for (int resultValue = 0; resultValue < result.size(); resultValue++)
@@ -447,6 +456,8 @@ void UCodeInterpreter::Execute(int now)
         {
 
             if (Instructions[now].param1 == "read") {
+
+                ui.tableWidget->selectRow(PC);
 
                 read->setModal(true);
                 int dialogCode = read->exec();

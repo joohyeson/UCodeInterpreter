@@ -15,6 +15,11 @@ public:
         return std::stoi(strValue);
     }
 
+    void reject()
+    {
+        return;
+    }
+
 signals:
     void sendData(QString text);
 
