@@ -57,7 +57,7 @@ void UCodeInterpreter::On_JumpButton_Clicked()
 {
     if (filecheck == 0)
     {
-        msgbox.setText("First read .*uco file");
+        msgbox.setText("First read *.uco file");
         msgbox.exec();
 
         return;
@@ -111,7 +111,7 @@ void UCodeInterpreter::On_StepButton_Clicked()
 {
     if (filecheck == 0)
     {
-        msgbox.setText("First read .*uco file");
+        msgbox.setText("First read *.uco file");
         msgbox.exec();
 
         return;
@@ -147,7 +147,7 @@ void UCodeInterpreter::On_RunButton_Clicked()
 {
     if (filecheck == 0)
     {
-        msgbox.setText("First read .*uco file");
+        msgbox.setText("First read *.uco file");
         msgbox.exec();
 
         return;
@@ -290,7 +290,6 @@ void UCodeInterpreter::ReadFile(std::string path)
     }
 
     is.close();
-    //ui.textEdit->setText(QString::number(Labels[1].addr));
 }
 
 int UCodeInterpreter::GetParamCount(std::string ins)
@@ -400,7 +399,7 @@ void UCodeInterpreter::Execute(int now)
         break;
     }
 
-    // 함수 정의 및 호출  확실 x
+    // 함수 정의 및 호출
     case opcode::ret:
     {
         int returnAddr = mMemory.GetMemoryValue(mMemory.GetBP() + 1);
@@ -470,7 +469,6 @@ void UCodeInterpreter::Execute(int now)
 
                     mMemory.SetSP(mMemory.GetSP() - 2);
                     mMemory.ResizeMemory(mMemory.GetSP() + 1);
-                    //mCPU.push(read->GetReadValue());
                 }
                 instCnt[37] ++;
                 InstTotalCnt++;
